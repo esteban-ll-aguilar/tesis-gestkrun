@@ -1,0 +1,63 @@
+from enum import StrEnum
+
+
+class Rol(StrEnum):
+    ADMIN = "ADMIN"
+    PRODUCT_OWNER = "PRODUCT_OWNER"
+    SCRUM_MASTER = "SCRUM_MASTER"
+    DEVELOPER = "DEVELOPER"
+
+
+class EstadoTarea(StrEnum):
+    PENDIENTE = "PENDIENTE"
+    EN_PROCESO = "EN_PROCESO"
+    BLOQUEADO = "BLOQUEADO"
+    EN_REVISION = "EN_REVISION"
+    TERMINADO = "TERMINADO"
+    CANCELADO = "CANCELADO"
+
+
+class EstadoSprint(StrEnum):
+    PLANIFICADO = "PLANIFICADO"
+    EN_EJECUCION = "EN_EJECUCION"
+    FINALIZADO = "FINALIZADO"
+    CANCELADO = "CANCELADO"
+
+
+class EstadoProyecto(StrEnum):
+    ACTIVO = "ACTIVO"
+    INACTIVO = "INACTIVO"
+    FINALIZADO = "FINALIZADO"
+    CANCELADO = "CANCELADO"
+
+
+class EstadoModulo(StrEnum):
+    ACTIVO = "ACTIVO"
+    INACTIVO = "INACTIVO"
+
+
+class Prioridad(StrEnum):
+    BAJA = "BAJA"
+    MEDIA = "MEDIA"
+    ALTA = "ALTA"
+    CRITICA = "CRITICA"
+
+
+class TipoArtefacto(StrEnum):
+    REQUISITO = "REQUISITO"
+    DIAGRAMA = "DIAGRAMA"
+    ACTA = "ACTA"
+    DOCUMENTO = "DOCUMENTO"
+    CODIGO = "CODIGO"
+
+
+class TipoMensaje(StrEnum):
+    PROYECTO = "PROYECTO"
+    TAREA = "TAREA"
+
+
+class TipoEventoScrum(StrEnum):
+    SPRINT_PLANNING = "SPRINT_PLANNING"
+    DAILY_SCRUM = "DAILY_SCRUM"
+    SPRINT_REVIEW = "SPRINT_REVIEW"
+    SPRINT_RETROSPECTIVE = "SPRINT_RETROSPECTIVE"

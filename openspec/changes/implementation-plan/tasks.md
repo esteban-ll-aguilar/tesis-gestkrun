@@ -11,43 +11,43 @@
 - [x] 1.9 Configurar React Router v6 con lazy loading
 - [x] 1.10 Configurar providers: QueryClient, Theme, i18n
 - [x] 1.11 Implementar layouts: AuthLayout, MainLayout, AdminLayout
-- [ ] 1.12 Configurar CI/CD base: lint → test → build en GitHub Actions
+- [x] 1.12 Configurar CI/CD base: lint → test → build en GitHub Actions
 
 ## 2. Modelo de dominio
 
-- [ ] 2.1 Crear enums: Rol, EstadoTarea, EstadoSprint, EstadoProyecto, EstadoModulo, Prioridad, TipoArtefacto, TipoMensaje, TipoEventoScrum
-- [ ] 2.2 Crear Value Objects: Email, PasswordHash, EstimacionEsfuerzo (1-21), UserId, ProjectId, TaskId, SprintId, EpicaId, WIPCount
-- [ ] 2.3 Crear entidad User con Email, PasswordHash, Rol
-- [ ] 2.4 Crear entidad Project con EstadoProyecto
-- [ ] 2.5 Crear entidad Module con EstadoModulo
-- [ ] 2.6 Crear entidad Epica con Prioridad
-- [ ] 2.7 Crear entidad HistoriaUsuario con Prioridad, EstimacionEsfuerzo
-- [ ] 2.8 Crear entidad Sprint con EstadoSprint
-- [ ] 2.9 Crear entidad SprintEvento con TipoEventoScrum
-- [ ] 2.10 Crear entidad Task con EstadoTarea
-- [ ] 2.11 Crear entidad TaskStateTransition (audit log de transiciones)
-- [ ] 2.12 Crear entidad Message con TipoMensaje
-- [ ] 2.13 Crear entidad Artifact con TipoArtefacto
-- [ ] 2.14 Crear entidad ArtifactVersion
-- [ ] 2.15 Crear Domain Events (13 eventos)
-- [ ] 2.16 Crear Domain Services: WIPValidationService, KanbanFlowService, MetricsCalculationService
-- [ ] 2.17 Crear interfaces de repositorio por aggregate
-- [ ] 2.18 Escribir tests unitarios del dominio (entidades, VOs, servicios, eventos)
-- [ ] 2.19 Verificar invariantes en tests (WIP ≤ 3, solo PO prioriza, etc.)
+- [x] 2.1 Crear enums: Rol, EstadoTarea, EstadoSprint, EstadoProyecto, EstadoModulo, Prioridad, TipoArtefacto, TipoMensaje, TipoEventoScrum
+- [x] 2.2 Crear Value Objects: Email, PasswordHash, EstimacionEsfuerzo (1-21), UserId, ProjectId, TaskId, SprintId, EpicaId, WIPCount
+- [x] 2.3 Crear entidad User con Email, PasswordHash, Rol
+- [x] 2.4 Crear entidad Project con EstadoProyecto
+- [x] 2.5 Crear entidad Module con EstadoModulo
+- [x] 2.6 Crear entidad Epica con Prioridad
+- [x] 2.7 Crear entidad HistoriaUsuario con Prioridad, EstimacionEsfuerzo
+- [x] 2.8 Crear entidad Sprint con EstadoSprint
+- [x] 2.9 Crear entidad SprintEvento con TipoEventoScrum
+- [x] 2.10 Crear entidad Task con EstadoTarea
+- [x] 2.11 Crear entidad TaskStateTransition (audit log de transiciones)
+- [x] 2.12 Crear entidad Message con TipoMensaje
+- [x] 2.13 Crear entidad Artifact con TipoArtefacto
+- [x] 2.14 Crear entidad ArtifactVersion
+- [x] 2.15 Crear Domain Events (13 eventos)
+- [x] 2.16 Crear Domain Services: WIPValidationService, KanbanFlowService, MetricsCalculationService
+- [x] 2.17 Crear interfaces de repositorio por aggregate
+- [x] 2.18 Escribir tests unitarios del dominio (entidades, VOs, servicios, eventos)
+- [x] 2.19 Verificar invariantes en tests (WIP ≤ 3, solo PO prioriza, etc.)
 
 ## 3. Persistencia
 
-- [ ] 3.1 Crear migración Alembic inicial con tabla users + roles (seed data)
-- [ ] 3.2 Crear tablas: projects, project_assignments, modules
-- [ ] 3.3 Crear tablas: epicas, historias_usuario
-- [ ] 3.4 Crear tablas: sprints, sprint_eventos, tasks
-- [ ] 3.5 Crear tabla task_state_transitions con particionamiento mensual
-- [ ] 3.6 Crear tablas: messages, artifacts, artifact_versions
-- [ ] 3.7 Crear índices compuestos y parciales
-- [ ] 3.8 Crear materialized views: mv_dashboard_metrics, mv_sprint_velocity
-- [ ] 3.9 Implementar SQLAlchemy repositories (todos los aggregates)
-- [ ] 3.10 Implementar soft-delete + audit trail (campos created_by, updated_by)
-- [ ] 3.11 Escribir tests de integración con TestContainers
+- [x] 3.1 Crear migración Alembic inicial con tabla users + roles (seed data)
+- [x] 3.2 Crear tablas: projects, project_assignments, modules
+- [x] 3.3 Crear tablas: epicas, historias_usuario
+- [x] 3.4 Crear tablas: sprints, sprint_eventos, tasks
+- [x] 3.5 Crear tabla task_state_transitions con particionamiento mensual
+- [x] 3.6 Crear tablas: messages, artifacts, artifact_versions
+- [x] 3.7 Crear índices compuestos y parciales
+- [x] 3.8 Crear materialized views: mv_dashboard_metrics, mv_sprint_velocity
+- [x] 3.9 Implementar SQLAlchemy repositories (todos los aggregates)
+- [x] 3.10 Implementar soft-delete + audit trail (campos created_by, updated_by)
+- [x] 3.11 Escribir tests de integración con TestContainers
 
 ## 4. Autenticación y autorización
 
