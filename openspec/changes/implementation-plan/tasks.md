@@ -51,35 +51,35 @@
 
 ## 4. Autenticación y autorización
 
-- [ ] 4.1 Implementar PasswordHasher (Argon2id)
-- [ ] 4.2 Implementar JWTProvider (access 15 min, refresh 7 días)
-- [ ] 4.3 Implementar endpoint POST /auth/register
-- [ ] 4.4 Implementar endpoint POST /auth/login
-- [ ] 4.5 Implementar endpoint POST /auth/refresh (rotación con invalidación)
-- [ ] 4.6 Implementar endpoint POST /auth/logout
-- [ ] 4.7 Implementar endpoint POST /auth/recover-password
-- [ ] 4.8 Implementar dependencias: get_current_user, require_role, require_project_role
-- [ ] 4.9 Implementar rate limiting (100 req/min general, 20 req/min auth)
-- [ ] 4.10 Frontend: Login page con validación Zod
-- [ ] 4.11 Frontend: Register page
-- [ ] 4.12 Frontend: RecoverPassword page
-- [ ] 4.13 Frontend: Auth guard y role guards en React Router
-- [ ] 4.14 Frontend: Refresh token interceptor
-- [ ] 4.15 Frontend: Auth store (Zustand)
+- [x] 4.1 Implementar PasswordHasher (Argon2id)
+- [x] 4.2 Implementar JWTProvider (access 15 min, refresh 7 días)
+- [x] 4.3 Implementar endpoint POST /auth/register
+- [x] 4.4 Implementar endpoint POST /auth/login
+- [x] 4.5 Implementar endpoint POST /auth/refresh (rotación con invalidación)
+- [x] 4.6 Implementar endpoint POST /auth/logout
+- [x] 4.7 Implementar endpoint POST /auth/recover-password
+- [x] 4.8 Implementar dependencias: get_current_user, require_role, require_project_role
+- [x] 4.9 Implementar rate limiting (100 req/min general, 20 req/min auth)
+- [x] 4.10 Frontend: Login page con validación Zod
+- [x] 4.11 Frontend: Register page
+- [x] 4.12 Frontend: RecoverPassword page
+- [x] 4.13 Frontend: Auth guard y role guards en React Router
+- [x] 4.14 Frontend: Refresh token interceptor
+- [x] 4.15 Frontend: Auth store (Zustand)
 - [ ] 4.16 Tests de integración de auth
 
 ## 5. API REST — Proyectos, Módulos, Equipos
 
-- [ ] 5.1 Backend: CreateProjectUseCase + endpoint POST /projects
-- [ ] 5.2 Backend: GetProjectsUseCase + endpoint GET /projects (paginación cursor)
-- [ ] 5.3 Backend: UpdateProjectUseCase + PATCH /projects/{id}
-- [ ] 5.4 Backend: DeleteProjectUseCase (soft) + DELETE /projects/{id}
-- [ ] 5.5 Backend: Módulos CRUD + endpoints
-- [ ] 5.6 Backend: Team assignment + endpoint POST /projects/{id}/assignments
-- [ ] 5.7 Frontend: ProjectList page con DataTable
-- [ ] 5.8 Frontend: ProjectForm (create/edit) con React Hook Form + Zod
-- [ ] 5.9 Frontend: ProjectDetail page con tabs (módulos, equipo)
-- [ ] 5.10 Frontend: Team management UI
+- [x] 5.1 Backend: CreateProjectUseCase + endpoint POST /projects
+- [x] 5.2 Backend: GetProjectsUseCase + endpoint GET /projects (paginación cursor)
+- [x] 5.3 Backend: UpdateProjectUseCase + PATCH /projects/{id}
+- [x] 5.4 Backend: DeleteProjectUseCase (soft) + DELETE /projects/{id}
+- [x] 5.5 Backend: Módulos CRUD + endpoints
+- [x] 5.6 Backend: Team assignment + endpoint POST /projects/{id}/assignments
+- [x] 5.7 Frontend: ProjectList page con DataTable
+- [x] 5.8 Frontend: ProjectForm (create/edit) con React Hook Form + Zod
+- [x] 5.9 Frontend: ProjectDetail page con tabs (módulos, equipo)
+- [x] 5.10 Frontend: Team management UI
 
 ## 6. Backlog y Sprints
 
