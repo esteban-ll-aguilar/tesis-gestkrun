@@ -115,6 +115,9 @@ context: |
   - Vacuum y analyze automáticos; monitorear bloat con pgstattuple.
 
   Documentación:
+  - Spec de producto: /product.md (visión, usuarios, funcionalidades, flujos)
+  - Invariants y SLOs: /config.yaml (domain invariants + performance SLOs)
+  - Arquitectura: /docs/architecture.md (Clean Architecture, Bounded Contexts, NFRs)
   - ADR (Architecture Decision Records) en /docs/adr/ para decisiones técnicas clave.
   - C4Model: Context, Container, Component, Code en /docs/c4/.
   - UML: Diagramas de clases, secuencia, estado, actividad en /docs/uml/.

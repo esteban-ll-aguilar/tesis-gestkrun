@@ -48,12 +48,6 @@
           "label": "- fechaRegistro : DateTime"
         },
         {
-          "id": "6e32AYOivEadNJBoou7x-8",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-1",
-          "label": "+ validarLimiteWIP() : bool"
-        },
-        {
           "id": "6e32AYOivEadNJBoou7x-9",
           "type": "node",
           "parent": "6e32AYOivEadNJBoou7x-1"
@@ -62,36 +56,7 @@
           "id": "6e32AYOivEadNJBoou7x-10",
           "type": "node",
           "parent": "1",
-          "label": "Rol"
-        },
-        {
-          "id": "6e32AYOivEadNJBoou7x-11",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-10",
-          "label": "- id : UUID"
-        },
-        {
-          "id": "6e32AYOivEadNJBoou7x-12",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-10",
-          "label": "- nombre : String"
-        },
-        {
-          "id": "6e32AYOivEadNJBoou7x-13",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-10",
-          "label": "- descripcion : String"
-        },
-        {
-          "id": "6e32AYOivEadNJBoou7x-14",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-10",
-          "label": "- permisos : List<String>"
-        },
-        {
-          "id": "6e32AYOivEadNJBoou7x-15",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-10"
+          "label": "«enumeration» Rol"
         },
         {
           "id": "6e32AYOivEadNJBoou7x-16",
@@ -128,12 +93,6 @@
           "type": "node",
           "parent": "6e32AYOivEadNJBoou7x-16",
           "label": "- fechaInicio : Date"
-        },
-        {
-          "id": "6e32AYOivEadNJBoou7x-22",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-16",
-          "label": "- limiteWIP : int"
         },
         {
           "id": "6e32AYOivEadNJBoou7x-23",
@@ -621,18 +580,6 @@
           "label": "PROYECTO"
         },
         {
-          "id": "6e32AYOivEadNJBoou7x-105",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-103",
-          "label": "MODULO"
-        },
-        {
-          "id": "6e32AYOivEadNJBoou7x-106",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-103",
-          "label": "PRIVADO"
-        },
-        {
           "id": "6e32AYOivEadNJBoou7x-107",
           "type": "node",
           "parent": "1",
@@ -685,12 +632,6 @@
           "type": "node",
           "parent": "6e32AYOivEadNJBoou7x-112",
           "label": "CANCELADO"
-        },
-        {
-          "id": "6e32AYOivEadNJBoou7x-116",
-          "type": "node",
-          "parent": "6e32AYOivEadNJBoou7x-112",
-          "label": "PAUSADO"
         },
         {
           "id": "6e32AYOivEadNJBoou7x-117",
@@ -756,7 +697,7 @@
           "id": "6e32AYOivEadNJBoou7x-126",
           "type": "edge",
           "parent": "1",
-          "source": "6e32AYOivEadNJBoou7x-28",
+          "source": "6e32AYOivEadNJBoou7x-16",
           "target": "6e32AYOivEadNJBoou7x-34",
           "label": "organiza"
         },
@@ -1040,6 +981,172 @@
           "parent": "1",
           "source": "6e32AYOivEadNJBoou7x-76",
           "target": "6e32AYOivEadNJBoou7x-97"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-169",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10",
+          "label": "ADMIN"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-170",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10",
+          "label": "PRODUCT_OWNER"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-171",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10",
+          "label": "SCRUM_MASTER"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-172",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10",
+          "label": "DEVELOPER"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-173",
+          "type": "node",
+          "parent": "1",
+          "label": "Epica"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-174",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-173",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-175",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-173",
+          "label": "- titulo : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-176",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-173",
+          "label": "- descripcion : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-177",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-173",
+          "label": "- prioridad : Prioridad"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-178",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-173",
+          "label": "- estado : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-179",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-173",
+          "target": "6e32AYOivEadNJBoou7x-43",
+          "label": "contiene"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-180",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-179",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-181",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-179",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-182",
+          "type": "node",
+          "parent": "1",
+          "label": "TaskStateTransition"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-183",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-182",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-184",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-182",
+          "label": "- taskId : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-185",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-182",
+          "label": "- fromEstado : EstadoTarea"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-186",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-182",
+          "label": "- toEstado : EstadoTarea"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-187",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-182",
+          "label": "- timestamp : DateTime"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-188",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-182",
+          "label": "- userId : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-189",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-182",
+          "label": "- reason : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-190",
+          "type": "node",
+          "parent": "1",
+          "label": "«enumeration» EstadoModulo"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-191",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-190",
+          "label": "ACTIVO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-192",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-190",
+          "label": "INACTIVO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-193",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-43",
+          "target": "6e32AYOivEadNJBoou7x-28",
+          "label": "pertenece a"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-194",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-193",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-195",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-193",
+          "label": "1"
         }
       ]
     }

@@ -1,0 +1,26 @@
+# =============================================================================
+# GESTKRUN — Domain Invariants & Performance SLOs
+# =============================================================================
+# Referenciado desde: docs/architecture.md (Sección 6)
+# Fuente de verdad: product.md
+
+# Invariants del dominio (reglas que nunca deben violarse)
+invariants:
+  - Un Developer no puede tener más de 3 tareas en estado EN_PROCESO simultáneamente (WIP limit).
+  - Una Tarea no puede avanzar en el tablero Kanban sin estar asignada a un Sprint activo.
+  - Una Tarea no puede estar en el tablero sin estar derivada de una Historia de Usuario en el Backlog.
+  - Solo el Product Owner puede priorizar el Product Backlog.
+  - Solo el Scrum Master puede cerrar un Sprint.
+  - El Administrador no puede crear ni gestionar proyectos ni tareas dentro de equipos.
+  - Las métricas de cycle time y lead time deben recalcularse automáticamente ante cada transición de estado.
+  - Los eventos ágiles (Daily, Review, Retro) deben registrarse únicamente dentro de un Sprint existente.
+
+# Performance SLOs
+slos:
+  - latency_p99_api: "< 200ms para endpoints de lectura (Dashboard, Kanban)"
+  - latency_p99_mutation: "< 500ms para operaciones de escritura (cambio de estado, creación sprint)"
+  - latency_p99_report: "< 3s para reportes y métricas agregadas"
+  - availability: "> 99.5%"
+  - wip_validation_response: "< 50ms (validación síncrona en backend)"
+  - kanban_drag_drop_feedback: "< 100ms (optimistic update + rollback si falla)"
+  - dashboard_load: "< 2s en conexión estándar (3G)"
