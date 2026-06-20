@@ -1,16 +1,16 @@
 ## 1. Infraestructura base
 
-- [ ] 1.1 Crear Docker Compose con PostgreSQL 16, Redis, PgBouncer, Nginx
-- [ ] 1.2 Crear Makefile con comandos: up, down, logs, shell, test, lint, migrate
-- [ ] 1.3 Inicializar proyecto FastAPI con Poetry: estructura de carpetas, dependencias
-- [ ] 1.4 Implementar Pydantic BaseSettings (configuración vía .env)
-- [ ] 1.5 Implementar logging con structlog + correlation_id
-- [ ] 1.6 Implementar manejador centralizado de excepciones (Problem+JSON)
-- [ ] 1.7 Implementar health endpoints: /health, /ready, /metrics
-- [ ] 1.8 Inicializar proyecto React con Vite + TypeScript + Tailwind + shadcn/ui
-- [ ] 1.9 Configurar React Router v6 con lazy loading
-- [ ] 1.10 Configurar providers: QueryClient, Theme, i18n
-- [ ] 1.11 Implementar layouts: AuthLayout, MainLayout, AdminLayout
+- [x] 1.1 Crear Docker Compose con PostgreSQL 16, Redis, PgBouncer, Nginx
+- [x] 1.2 Crear Makefile con comandos: up, down, logs, shell, test, lint, migrate
+- [x] 1.3 Inicializar proyecto FastAPI con Poetry: estructura de carpetas, dependencias
+- [x] 1.4 Implementar Pydantic BaseSettings (configuración vía .env)
+- [x] 1.5 Implementar logging con structlog + correlation_id
+- [x] 1.6 Implementar manejador centralizado de excepciones (Problem+JSON)
+- [x] 1.7 Implementar health endpoints: /health, /ready, /metrics
+- [x] 1.8 Inicializar proyecto React con Vite + TypeScript + Tailwind + shadcn/ui
+- [x] 1.9 Configurar React Router v6 con lazy loading
+- [x] 1.10 Configurar providers: QueryClient, Theme, i18n
+- [x] 1.11 Implementar layouts: AuthLayout, MainLayout, AdminLayout
 - [ ] 1.12 Configurar CI/CD base: lint → test → build en GitHub Actions
 
 ## 2. Modelo de dominio
