@@ -107,32 +107,32 @@
 - [x] 7.8 Frontend: Alerta visual WIP (2/3 amarillo, 3/3 bloqueo)
 - [x] 7.9 Frontend: Task detail modal (transiciones, bloqueo, asignación)
 - [x] 7.10 Frontend: Impediment management (causa, responsable)
-- [ ] 7.11 Tests E2E con Playwright del flujo Kanban
+- [x] 7.11 Tests E2E con Playwright del flujo Kanban
 
 ## 8. Mensajería y Artefactos
 
-- [ ] 8.1 Backend: SendMessageUseCase + POST messages
-- [ ] 8.2 Backend: GetMessagesUseCase (paginación cursor-based)
-- [ ] 8.3 Backend: WebSocket handler para mensajes en tiempo real
-- [ ] 8.4 Frontend: Chat panel con scroll infinito
-- [ ] 8.5 Frontend: WebSocket connection para tiempo real
-- [ ] 8.6 Backend: UploadArtifactUseCase + POST /artifacts
-- [ ] 8.7 Backend: Versionado automático + endpoints de versiones
-- [ ] 8.8 Backend: Download endpoint
-- [ ] 8.9 Frontend: Upload zone con drag & drop
-- [ ] 8.10 Frontend: Artifact list + version history + preview
+- [x] 8.1 Backend: SendMessageUseCase + POST messages
+- [x] 8.2 Backend: GetMessagesUseCase (paginación cursor-based)
+- [x] 8.3 Backend: WebSocket handler para mensajes en tiempo real
+- [x] 8.4 Frontend: Chat panel con scroll infinito
+- [x] 8.5 Frontend: WebSocket connection para tiempo real
+- [x] 8.6 Backend: UploadArtifactUseCase + POST /artifacts
+- [x] 8.7 Backend: Versionado automático + endpoints de versiones
+- [x] 8.8 Backend: Download endpoint
+- [x] 8.9 Frontend: Upload zone con drag & drop
+- [x] 8.10 Frontend: Artifact list + version history + preview
 
 ## 9. Dashboard y Métricas
 
-- [ ] 9.1 Backend: Celery task para refresh de materialized views (cada 5 min)
-- [ ] 9.2 Backend: GET /dashboard/{projectId}/metrics
-- [ ] 9.3 Backend: GET /dashboard/{projectId}/velocity
-- [ ] 9.4 Frontend: Dashboard page con cards de métricas
-- [ ] 9.5 Frontend: Velocity chart (Recharts bar chart)
-- [ ] 9.6 Frontend: Lead time / Cycle time chart (line chart)
-- [ ] 9.7 Frontend: Throughput chart (area chart)
-- [ ] 9.8 Frontend: Task distribution by status (donut chart)
-- [ ] 9.9 Frontend: Bloqueadas activas alert
+- [x] 9.1 Backend: Celery task para refresh de materialized views (cada 5 min)
+- [x] 9.2 Backend: GET /dashboard/{projectId}/metrics
+- [x] 9.3 Backend: GET /dashboard/{projectId}/velocity
+- [x] 9.4 Frontend: Dashboard page con cards de métricas
+- [x] 9.5 Frontend: Velocity chart (Recharts bar chart)
+- [x] 9.6 Frontend: Lead time / Cycle time chart (line chart)
+- [x] 9.7 Frontend: Throughput chart (area chart)
+- [x] 9.8 Frontend: Task distribution by status (donut chart)
+- [x] 9.9 Frontend: Bloqueadas activas alert
 
 ## 10. Calidad, CI/CD y documentación
 

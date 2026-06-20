@@ -16,6 +16,8 @@ const SprintListPage = lazy(() => import('../pages/SprintListPage'))
 const SprintPlanningPage = lazy(() => import('../pages/SprintPlanningPage'))
 const SprintDetailPage = lazy(() => import('../pages/SprintDetailPage'))
 const BoardPage = lazy(() => import('../pages/BoardPage'))
+const ChatPage = lazy(() => import('../pages/ChatPage'))
+const ArtifactsPage = lazy(() => import('../pages/ArtifactsPage'))
 
 function Loading() {
   return <div className="flex items-center justify-center h-screen">Cargando...</div>
@@ -88,6 +90,14 @@ const router = createBrowserRouter([
           {
             path: 'projects/:id/sprints/:sprintId/board',
             element: <Suspense fallback={<Loading />}><BoardPage /></Suspense>,
+          },
+          {
+            path: 'projects/:id/chat',
+            element: <Suspense fallback={<Loading />}><ChatPage /></Suspense>,
+          },
+          {
+            path: 'projects/:id/artifacts/:taskId',
+            element: <Suspense fallback={<Loading />}><ArtifactsPage /></Suspense>,
           },
         ],
       },
