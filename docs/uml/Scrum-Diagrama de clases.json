@@ -1,0 +1,1047 @@
+{
+  "version": "30.2.4",
+  "pages": [
+    {
+      "id": "GzeDY44xHy1XW3DGwo4f",
+      "name": "Diagrama de clases",
+      "cells": [
+        {
+          "id": "6e32AYOivEadNJBoou7x-1",
+          "type": "node",
+          "parent": "1",
+          "label": "Usuario"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-2",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-1",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-3",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-1",
+          "label": "- nombre : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-4",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-1",
+          "label": "- email : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-5",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-1",
+          "label": "- contraseña : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-6",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-1",
+          "label": "- rol : Rol"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-7",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-1",
+          "label": "- fechaRegistro : DateTime"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-8",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-1",
+          "label": "+ validarLimiteWIP() : bool"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-9",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-10",
+          "type": "node",
+          "parent": "1",
+          "label": "Rol"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-11",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-12",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10",
+          "label": "- nombre : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-13",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10",
+          "label": "- descripcion : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-14",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10",
+          "label": "- permisos : List<String>"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-15",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-10"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-16",
+          "type": "node",
+          "parent": "1",
+          "label": "Proyecto"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-17",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-16",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-18",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-16",
+          "label": "- nombre : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-19",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-16",
+          "label": "- descripcion : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-20",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-16",
+          "label": "- estado : EstadoProyecto"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-21",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-16",
+          "label": "- fechaInicio : Date"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-22",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-16",
+          "label": "- limiteWIP : int"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-23",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-16"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-24",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-28",
+          "target": "6e32AYOivEadNJBoou7x-60"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-25",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-24",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-26",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-24",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-27",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-24",
+          "label": "tiene"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-28",
+          "type": "node",
+          "parent": "1",
+          "label": "Modulo"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-29",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-28",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-30",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-28",
+          "label": "- nombre : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-31",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-28",
+          "label": "- descripcion : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-32",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-28",
+          "label": "- estado : EstadoModulo"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-33",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-28"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-34",
+          "type": "node",
+          "parent": "1",
+          "label": "Sprint"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-35",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-34",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-36",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-34",
+          "label": "- nombre : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-37",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-34",
+          "label": "- objetivo : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-38",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-34",
+          "label": "- duracion : int"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-39",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-34",
+          "label": "- fechaInicio : Date"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-40",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-34",
+          "label": "- fechaFin : Date"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-41",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-34",
+          "label": "- estado : EstadoSprint"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-42",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-34"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-43",
+          "type": "node",
+          "parent": "1",
+          "label": "HistoriaUsuario"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-44",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-43",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-45",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-43",
+          "label": "- titulo : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-46",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-43",
+          "label": "- descripcion : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-47",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-43",
+          "label": "- criteriosAceptacion : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-48",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-43",
+          "label": "- prioridad : Prioridad"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-49",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-43"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-50",
+          "type": "node",
+          "parent": "1",
+          "label": "Tarea"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-51",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-52",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50",
+          "label": "- titulo : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-53",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50",
+          "label": "- descripcion : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-54",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50",
+          "label": "- estado : EstadoTarea"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-55",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50",
+          "label": "- fechaCreacion : DateTime"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-56",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50",
+          "label": "- fechaLimite : Date"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-57",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50",
+          "label": "+ cambiarEstado(nuevoEstado)"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-58",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50",
+          "label": "+ validarWIP() : boolean"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-59",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-50"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-60",
+          "type": "node",
+          "parent": "1",
+          "label": "Mensaje"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-61",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-60",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-62",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-60",
+          "label": "- contenido : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-63",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-60",
+          "label": "- fechaEnvio : DateTime"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-64",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-60",
+          "label": "- tipo : TipoMensaje"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-65",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-60"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-66",
+          "type": "node",
+          "parent": "1",
+          "label": "SprintEvento"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-67",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-66",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-68",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-66",
+          "label": "- tipo : TipoEventoScrum"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-69",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-66",
+          "label": "- fecha : DateTime"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-70",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-66",
+          "label": "- notas : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-71",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-66",
+          "label": "- duracion : int"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-72",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-66"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-73",
+          "type": "node",
+          "parent": "1",
+          "label": "Artefacto"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-74",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-73",
+          "label": "- id : UUID"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-75",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-73",
+          "label": "- nombre : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-76",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-73",
+          "label": "- tipo : TipoArtefacto"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-77",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-73",
+          "label": "- contenidoURL : String"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-78",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-73",
+          "label": "- version : int"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-79",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-73"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-80",
+          "type": "node",
+          "parent": "1",
+          "label": "«enumeration» EstadoTarea"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-81",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-80",
+          "label": "PENDIENTE"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-82",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-80",
+          "label": "EN_PROCESO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-83",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-80",
+          "label": "BLOQUEADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-84",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-80",
+          "label": "EN_REVISION"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-85",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-80",
+          "label": "TERMINADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-86",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-80",
+          "label": "CANCELADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-87",
+          "type": "node",
+          "parent": "1",
+          "label": "«enumeration» EstadoSprint"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-88",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-87",
+          "label": "PLANIFICADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-89",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-87",
+          "label": "EN_EJECUCION"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-90",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-87",
+          "label": "FINALIZADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-91",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-87",
+          "label": "CANCELADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-92",
+          "type": "node",
+          "parent": "1",
+          "label": "«enumeration» Prioridad"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-93",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-92",
+          "label": "BAJA"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-94",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-92",
+          "label": "MEDIA"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-95",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-92",
+          "label": "ALTA"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-96",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-92",
+          "label": "CRITICA"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-97",
+          "type": "node",
+          "parent": "1",
+          "label": "«enumeration» TipoArtefacto"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-98",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-97",
+          "label": "REQUISITO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-99",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-97",
+          "label": "DIAGRAMA"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-100",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-97",
+          "label": "ACTA"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-101",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-97",
+          "label": "DOCUMENTO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-102",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-97",
+          "label": "CODIGO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-103",
+          "type": "node",
+          "parent": "1",
+          "label": "«enumeration» TipoMensaje"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-104",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-103",
+          "label": "PROYECTO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-105",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-103",
+          "label": "MODULO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-106",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-103",
+          "label": "PRIVADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-107",
+          "type": "node",
+          "parent": "1",
+          "label": "«enumeration» TipoEventoScrum"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-108",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-107",
+          "label": "SPRINT_PLANNING"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-109",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-107",
+          "label": "DAILY_SCRUM"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-110",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-107",
+          "label": "SPRINT_REVIEW"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-111",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-107",
+          "label": "SPRINT_RETROSPECTIVE"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-112",
+          "type": "node",
+          "parent": "1",
+          "label": "«enumeration» EstadoProyecto"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-113",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-112",
+          "label": "ACTIVO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-114",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-112",
+          "label": "FINALIZADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-115",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-112",
+          "label": "CANCELADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-116",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-112",
+          "label": "PAUSADO"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-117",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-1",
+          "target": "6e32AYOivEadNJBoou7x-10",
+          "label": "tiene"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-118",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-117",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-119",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-117",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-120",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-1",
+          "target": "6e32AYOivEadNJBoou7x-16",
+          "label": "crea/gestiona"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-121",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-120",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-122",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-120",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-123",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-16",
+          "target": "6e32AYOivEadNJBoou7x-28",
+          "label": "contiene"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-124",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-123",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-125",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-123",
+          "label": "1..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-126",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-28",
+          "target": "6e32AYOivEadNJBoou7x-34",
+          "label": "organiza"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-127",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-126",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-128",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-126",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-129",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-34",
+          "target": "6e32AYOivEadNJBoou7x-50",
+          "label": "contiene"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-130",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-129",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-131",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-129",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-132",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-50",
+          "target": "6e32AYOivEadNJBoou7x-1",
+          "label": "asignada a"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-133",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-132",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-134",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-132",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-135",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-1",
+          "target": "6e32AYOivEadNJBoou7x-60",
+          "label": "envia/recibe"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-136",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-135",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-137",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-135",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-138",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-16",
+          "target": "6e32AYOivEadNJBoou7x-60",
+          "label": "contexto"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-139",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-138",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-140",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-138",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-141",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-34",
+          "target": "6e32AYOivEadNJBoou7x-66",
+          "label": "registra"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-142",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-141",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-143",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-141",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-144",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-16",
+          "target": "6e32AYOivEadNJBoou7x-1",
+          "label": "productOwner"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-145",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-144",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-146",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-144",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-147",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-28",
+          "target": "6e32AYOivEadNJBoou7x-1",
+          "label": "desarrolladores"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-148",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-147",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-149",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-147",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-150",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-34",
+          "target": "6e32AYOivEadNJBoou7x-1",
+          "label": "scrumMaster"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-151",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-150",
+          "label": "1..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-152",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-150",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-153",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-16",
+          "target": "6e32AYOivEadNJBoou7x-43",
+          "label": "gestiona"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-154",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-153",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-155",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-153",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-156",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-43",
+          "target": "6e32AYOivEadNJBoou7x-50",
+          "label": "deriva en"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-157",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-156",
+          "label": "1"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-158",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-156",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-159",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-50",
+          "target": "6e32AYOivEadNJBoou7x-73",
+          "label": "adjunta"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-160",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-159",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-161",
+          "type": "node",
+          "parent": "6e32AYOivEadNJBoou7x-159",
+          "label": "0..*"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-162",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-50",
+          "target": "6e32AYOivEadNJBoou7x-80"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-163",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-41",
+          "target": "6e32AYOivEadNJBoou7x-87"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-164",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-68",
+          "target": "6e32AYOivEadNJBoou7x-107"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-165",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-64",
+          "target": "6e32AYOivEadNJBoou7x-103"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-166",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-20",
+          "target": "6e32AYOivEadNJBoou7x-112"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-167",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-48",
+          "target": "6e32AYOivEadNJBoou7x-92"
+        },
+        {
+          "id": "6e32AYOivEadNJBoou7x-168",
+          "type": "edge",
+          "parent": "1",
+          "source": "6e32AYOivEadNJBoou7x-76",
+          "target": "6e32AYOivEadNJBoou7x-97"
+        }
+      ]
+    }
+  ]
+}

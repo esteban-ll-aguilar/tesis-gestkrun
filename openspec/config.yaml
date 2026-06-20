@@ -1,0 +1,203 @@
+schema: spec-driven
+
+# =============================================================================
+# GESTKRUN — Configuración de Proyecto Spec-Driven
+# Infraestructura de software para gestión de proyectos bajo Scrumban
+# =============================================================================
+
+context: |
+  GESTKRUN:
+  Plataforma web para la gestión de proyectos de desarrollo de software bajo
+  el marco híbrido Scrumban, enfocada en la consistencia del flujo de trabajo
+  y métricas de desempeño del proceso.
+
+  Dominio:
+  - Gestión de proyectos de software con metodología híbrida Scrumban.
+  - Roles diferenciados: Administrador, Product Owner, Scrum Master, Developer.
+  - Artefactos ágiles: Product Backlog, Sprints, Tablero Kanban, Historias de Usuario, Tareas.
+  - Validación integrada de restricciones WIP (Work In Progress) por usuario y por columna.
+  - Trazabilidad automatizada entre backlog → sprint → tablero Kanban.
+  - Métricas de desempeño: lead time, cycle time, velocidad del sprint, tasa de violaciones WIP.
+  - Eventos ágiles: Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective.
+  - Mensajería asíncrona textual a nivel de proyecto y tarea.
+  - Gestión de artefactos documentales con versionado.
+
+  Referencias del dominio:
+  - SWEBOK v4 (KA 8: Software Engineering Process).
+  - ISO/IEC 25010:2023 (Functional Correctness, Performance Efficiency).
+  - Scrumban: híbrido Scrum + Kanban con WIP limits y flujo continuo.
+  - Documento de propuesta: "Proyecto GESTKRUN - Propuesta de software".
+  - Definición del proyecto académico: "DEFINICION_DEL_PROYECTO_Esteban-Leon-Aguilar.pdf".
+
+  Arquitectura:
+  - Clean Architecture (Robert C. Martin) con separación de capas.
+  - Domain-Driven Design (DDD): Entities, Value Objects, Aggregates, Domain Services, Repositories.
+  - CQRS para lecturas complejas (Dashboard, métricas, reportes).
+  - API RESTful con contratos de interfaz claros.
+  - Event-Driven para transiciones de estado y notificaciones.
+
+  Backend:
+  - Python 3.12+
+  - FastAPI 0.110+ (ASGI, validación Pydantic v2, dependencias nativas).
+  - SQLAlchemy 2.0 (ORM declarativo, async session, Core para queries optimizadas).
+  - Alembic (migraciones de esquema con versionado semántico).
+  - Pydantic v2 (validación, serialización, settings management).
+  - python-jose + passlib (JWT, hashing bcrypt/Argon2).
+  - pytest + httpx (tests unitarios, integración, async).
+  - Celery + Redis (tareas background: métricas, notificaciones, WIP audits).
+  - structlog + contextvars (logging estructurado con trace IDs).
+  - Uvicorn + Gunicorn (servidor ASGI con workers optimizados).
+  - Docker + Docker Compose (contenedores, redes, volúmenes).
+
+  Frontend:
+  - React 18+ con TypeScript 5.3+ (strict mode).
+  - Vite (build tool, HMR, tree-shaking).
+  - TanStack Query v5 (caché, sincronización, optimistic updates).
+  - Zustand (state management global, ligero, tipado).
+  - React Hook Form + Zod (formularios validados, tipado compartido con backend).
+  - React DnD / @dnd-kit (drag & drop del tablero Kanban).
+  - Tailwind CSS 3.4 + shadcn/ui (diseño atómico, accesible, responsive).
+  - Recharts / Tremor (visualización de métricas y dashboards).
+  - React Router v6 (SPA routing, lazy loading, guards por rol).
+  - i18next (internacionalización: es, en).
+  - Vitest + React Testing Library + MSW (tests unitarios, integración, mocks).
+  - Playwright (E2E: flujos críticos Kanban, WIP, login).
+
+  Base de datos:
+  - PostgreSQL 16+ (optimizado para concurrencia, JSONB, índices parciales).
+  - Extensiones: pg_trgm (búsqueda fuzzy), uuid-ossp, btree_gist (rangos temporales).
+  - Particionamiento por rango en tablas de alta cardinalidad (logs, eventos, métricas).
+  - Índices estratégicos: GIN (JSONB), BRIN (series temporales), partial (estados activos).
+  - Connection pooling: PgBouncer (modo transaction) para evitar agotamiento.
+  - Estrategia de soft-delete + audit trail (tablas de historia con triggers).
+
+  Infraestructura y despliegue:
+  - Docker + Docker Compose (desarrollo local).
+  - Nginx (reverse proxy, rate limiting, compresión, cache estática).
+  - CI/CD: GitHub Actions (lint, test, build, scan de seguridad, deploy).
+  - Monitoreo: Prometheus + Grafana (métricas de app e infraestructura).
+  - Logs: Loki + Grafana (agregación de logs estructurados).
+  - Alertas: Alertmanager (SLOs de latencia, errores, WIP violations).
+
+  Autenticación y autorización:
+  - JWT (access token corto + refresh token rotativo en httpOnly cookie).
+  - RBAC (Role-Based Access Control) con permisos granulares por recurso.
+  - Rate limiting por endpoint y por usuario (slowapi / nginx limit_req).
+
+  Reglas de desarrollo:
+  - Aplicar Principios SOLID en cada capa del backend.
+  - Aplicar Principios DRY y KISS; evitar over-engineering.
+  - Seguir Clean Code (nombres expresivos, funciones pequeñas, sin comentarios obvios).
+  - Documentar con docstrings (Google style) en Python; TSDoc en TypeScript.
+  - Mantener arquitectura modular y desacoplada (ports & adapters / hexagonal).
+  - Implementar control de errores centralizado (exception handlers, problem+json).
+  - Implementar logging estructurado con correlation_id por request.
+  - Implementar validación de datos en frontend (Zod) y backend (Pydantic).
+  - Aplicar principios de diseño de API RESTful (recursos, verbos HTTP, códigos de estado, HATEOAS ligero).
+  - Escribir tests unitarios (dominio), de integración (API, DB) y E2E (frontend).
+  - Priorizar seguridad (OWASP Top 10): input validation, SQL injection, XSS, CSRF, secrets management.
+  - Cobertura mínima: 85% backend, 75% frontend.
+  - Usar convenciones de código: PEP 8 / Ruff (Python), ESLint + Prettier (TS/React).
+  - Control de versiones con Git, Conventional Commits (feat:, fix:, refactor:, test:, docs:).
+  - Branching: trunk-based con feature flags para funcionalidades grandes.
+  - CI/CD: lint → test → build → security scan (Bandit, Semgrep, npm audit) → deploy staging.
+
+  Optimización de base de datos:
+  - Usar índices compuestos siguiendo el orden de cardinalidad descendente.
+  - Evitar N+1 queries: eager loading selectinload o joinedload estratégico.
+  - Usar CTEs y window functions para reportes y métricas agregadas.
+  - Implementar paginación cursor-based para listados grandes (backlog, historial).
+  - Soft deletes con índices parciales WHERE deleted_at IS NULL.
+  - Particionar tablas de eventos/métricas por mes usando declarative partitioning.
+  - Materialized views para dashboards de métricas (refresco cada 5 min vía Celery).
+  - Connection pooling con PgBouncer; max_connections PostgreSQL calibrado por worker.
+  - WAL level = replica; checkpoint_timeout = 10min; shared_buffers = 25% RAM.
+  - Vacuum y analyze automáticos; monitorear bloat con pgstattuple.
+
+  Documentación:
+  - ADR (Architecture Decision Records) en /docs/adr/ para decisiones técnicas clave.
+  - C4Model: Context, Container, Component, Code en /docs/c4/.
+  - UML: Diagramas de clases, secuencia, estado, actividad en /docs/uml/.
+  - API REST documentada con OpenAPI 3.1 (auto-generada por FastAPI) + Redoc.
+  - README ejecutivo con diagrama de arquitectura y guía de inicio rápido.
+
+# =============================================================================
+# PROCESO SDD OBLIGATORIO (Spec-Driven Development)
+# =============================================================================
+
+process:
+  discovery:
+    - Ejecutar proceso de descubrimiento de requisitos basado en la propuesta.
+    - Utilizar grill-me skill para aclarar requisitos ambiguos.
+    - Realizar al menos 5 preguntas de aclaración cuando existan dudas de dominio.
+  artifacts:
+    - No generar spec.md sin aprobación explícita del proposal.
+    - No generar design.md sin aprobación explícita del spec.
+    - No generar tasks.md sin aprobación explícita del design.
+    - Detenerse después de cada artefacto y solicitar validación del usuario.
+
+# =============================================================================
+# PER-ARTIFACT RULES
+# =============================================================================
+
+rules:
+  proposal:
+    - Must use grill-me skill
+    - Must ask clarification questions before generating proposal
+    - Must wait for user approval before finalizing proposal
+    - Keep proposals under 600 words
+    - Always include a "Non-goals" section
+    - Reference objetivos específicos del documento académico
+
+  specs:
+    - Must use gherkin-authoring skill para BDD de reglas críticas (WIP, trazabilidad)
+    - Must wait for proposal approval
+    - Must not generate design automatically
+    - Incluir contratos de API (OpenAPI snippets) para cada endpoint crítico
+    - Definir invariantes de dominio (reglas que nunca deben violarse)
+
+  designs:
+    - Must wait for spec approval
+    - Must use c4-architecture skill
+    - Must use architectural-decision-records skill
+    - Must use uml skill (diagrama de clases, secuencia WIP, estado tarea)
+    - Definir bounded contexts y aggregates DDD
+    - Especificar estrategia de persistencia por aggregate
+
+  tasks:
+    - Must wait for design approval
+    - Descomponer en tareas de máximo 30 minutos de implementación
+    - Separar tareas de backend (Python/FastAPI) y frontend (React/TS) cuando el cambio sea transversal
+    - Incluir tarea de migración de base de datos si aplica (Alembic revision)
+    - Incluir tarea de actualización de tests de integración con TestContainers (PostgreSQL en contenedor)
+    - Incluir tarea de actualización de tests de Zustand/React si se modifica state management
+    - Verificar que las tareas que afectan el dominio no violen las reglas de negocio críticas (WIP, trazabilidad)
+    - Agregar tarea de verificación de compatibilidad en navegadores para cambios de UI (Chrome, Firefox, Edge)
+    - Agregar tarea de generación/actualización de ADR si la tarea implica decisión arquitectónica
+
+# =============================================================================
+# DOMAIN INVARIANTS (Nunca violar)
+# =============================================================================
+
+invariants:
+  - Un Developer no puede tener más de 3 tareas en estado EN_PROCESO simultáneamente (WIP limit).
+  - Una Tarea no puede avanzar en el tablero Kanban sin estar asignada a un Sprint activo.
+  - Una Tarea no puede estar en el tablero sin estar derivada de una Historia de Usuario en el Backlog.
+  - Solo el Product Owner puede priorizar el Product Backlog.
+  - Solo el Scrum Master puede cerrar un Sprint.
+  - El Administrador no puede crear ni gestionar proyectos ni tareas dentro de equipos.
+  - Las métricas de cycle time y lead time deben recalcularse automáticamente ante cada transición de estado.
+  - Los eventos ágiles (Daily, Review, Retro) deben registrarse únicamente dentro de un Sprint existente.
+
+# =============================================================================
+# PERFORMANCE SLOs
+# =============================================================================
+
+slos:
+  - latency_p99_api: "< 200ms para endpoints de lectura (Dashboard, Kanban)"
+  - latency_p99_mutation: "< 500ms para operaciones de escritura (cambio de estado, creación sprint)"
+  - latency_p99_report: "< 3s para reportes y métricas agregadas"
+  - availability: "> 99.5%"
+  - wip_validation_response: "< 50ms (validación síncrona en backend)"
+  - kanban_drag_drop_feedback: "< 100ms (optimistic update + rollback si falla)"
+  - dashboard_load: "< 2s en conexión estándar (3G)"
