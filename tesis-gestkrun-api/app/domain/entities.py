@@ -102,12 +102,13 @@ class Project:
     estado: EstadoProyecto
     fecha_inicio: date
     owner_id: UserId
+    wip_limit: int = 3
     deleted_at: datetime | None = None
 
     _events: list[DomainEvent] = field(default_factory=list, repr=False)
 
     @staticmethod
-    def create(nombre: str, descripcion: str, owner_id: UserId) -> Project:
+    def create(nombre: str, descripcion: str, owner_id: UserId, wip_limit: int = 3) -> Project:
         project = Project(
             id=ProjectId.generate(),
             nombre=nombre,
@@ -115,6 +116,7 @@ class Project:
             estado=EstadoProyecto.ACTIVO,
             fecha_inicio=date.today(),
             owner_id=owner_id,
+            wip_limit=wip_limit,
         )
         project._events.append(ProjectCreated(
             project_id=project.id, nombre=nombre, owner_id=owner_id

@@ -80,6 +80,7 @@ class ProjectModel(Base, AuditMixin, SoftDeleteMixin):
         server_default="ACTIVO",
     )
     fecha_inicio: Mapped[datetime] = mapped_column(Date, nullable=False)
+    wip_limit: Mapped[int] = mapped_column(Integer, nullable=False, server_default="3")
     owner_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("users.id"), nullable=False
     )

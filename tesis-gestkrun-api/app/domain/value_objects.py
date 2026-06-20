@@ -181,13 +181,14 @@ class ArtifactVersionId:
 @dataclass(frozen=True)
 class WIPCount:
     value: int
+    limit: int = 3
 
     def __post_init__(self):
-        if not (0 <= self.value <= 3):
-            raise DomainError(f"WIP count must be between 0 and 3, got {self.value}")
+        if not (0 <= self.value <= self.limit):
+            raise DomainError(f"WIP count must be between 0 and {self.limit}, got {self.value}")
 
     def can_take_more(self) -> bool:
-        return self.value < 3
+        return self.value < self.limit
 
     def __int__(self) -> int:
         return self.value

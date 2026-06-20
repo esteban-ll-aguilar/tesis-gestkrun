@@ -7,17 +7,17 @@ from app.domain.value_objects import UserId
 
 
 class WIPValidationService:
-    MAX_WIP = 3
-
-    def validate(self, user_id: UserId, current_in_progress: int) -> WIPViolated | None:
-        if current_in_progress >= self.MAX_WIP:
+    def validate(
+        self, user_id: UserId, current_in_progress: int, wip_limit: int = 3
+    ) -> WIPViolated | None:
+        if current_in_progress >= wip_limit:
             return WIPViolated(
-                user_id=user_id, current_count=current_in_progress, max_allowed=self.MAX_WIP
+                user_id=user_id, current_count=current_in_progress, max_allowed=wip_limit
             )
         return None
 
-    def can_take_task(self, user_id: UserId, current_in_progress: int) -> bool:
-        return current_in_progress < self.MAX_WIP
+    def can_take_task(self, user_id: UserId, current_in_progress: int, wip_limit: int = 3) -> bool:
+        return current_in_progress < wip_limit
 
 
 class KanbanFlowService:

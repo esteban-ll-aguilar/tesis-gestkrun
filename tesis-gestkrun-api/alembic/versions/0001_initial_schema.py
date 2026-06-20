@@ -78,6 +78,7 @@ def upgrade() -> None:
         sa.Column("descripcion", sa.Text, nullable=False, server_default=""),
         sa.Column("estado", postgresql.ENUM(name="estado_proyecto_enum"), nullable=False, server_default="ACTIVO"),
         sa.Column("fecha_inicio", sa.Date, nullable=False),
+        sa.Column("wip_limit", sa.Integer, nullable=False, server_default="3"),
         sa.Column("owner_id", sa.String(36), sa.ForeignKey("users.id"), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now()),

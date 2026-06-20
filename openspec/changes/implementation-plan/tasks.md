@@ -83,30 +83,30 @@
 
 ## 6. Backlog y Sprints
 
-- [ ] 6.1 Backend: CRUD épicas + endpoints
-- [ ] 6.2 Backend: CRUD historias de usuario + endpoints
-- [ ] 6.3 Backend: Priorización de backlog (PUT /backlog/prioritize)
-- [ ] 6.4 Backend: PlanSprintUseCase + POST /sprints
-- [ ] 6.5 Backend: StartSprintUseCase + POST /sprints/{id}/start
-- [ ] 6.6 Backend: CloseSprintUseCase + POST /sprints/{id}/close
-- [ ] 6.7 Backend: CRUD sprint eventos + endpoints
-- [ ] 6.8 Frontend: Backlog page con drag & drop (épicas + historias)
-- [ ] 6.9 Frontend: SprintPlanning wizard con selección de historias
-- [ ] 6.10 Frontend: SprintList + SprintDetail pages
-- [ ] 6.11 Frontend: SprintEvent forms (Daily, Review, Retro)
+- [x] 6.1 Backend: CRUD épicas + endpoints
+- [x] 6.2 Backend: CRUD historias de usuario + endpoints
+- [x] 6.3 Backend: Priorización de backlog (PUT /backlog/prioritize)
+- [x] 6.4 Backend: PlanSprintUseCase + POST /sprints
+- [x] 6.5 Backend: StartSprintUseCase + POST /sprints/{id}/start
+- [x] 6.6 Backend: CloseSprintUseCase + POST /sprints/{id}/close
+- [x] 6.7 Backend: CRUD sprint eventos + endpoints
+- [x] 6.8 Frontend: Backlog page con drag & drop (épicas + historias)
+- [x] 6.9 Frontend: SprintPlanning wizard con selección de historias
+- [x] 6.10 Frontend: SprintList + SprintDetail pages
+- [x] 6.11 Frontend: SprintEvent forms (Daily, Review, Retro)
 
 ## 7. Tablero Kanban
 
-- [ ] 7.1 Backend: WIPValidationService (conteo por usuario, máx 3)
-- [ ] 7.2 Backend: KanbanFlowService (transiciones válidas)
-- [ ] 7.3 Backend: PATCH /tasks/{id}/transition (con validación WIP + audit log)
-- [ ] 7.4 Backend: PATCH /tasks/{id}/block, /tasks/{id}/unblock
-- [ ] 7.5 Backend: GET /boards/{sprintId}
-- [ ] 7.6 Frontend: KanbanBoard con @dnd-kit (6 columnas)
-- [ ] 7.7 Frontend: Optimistic update + rollback en drag & drop
-- [ ] 7.8 Frontend: Alerta visual WIP (2/3 amarillo, 3/3 bloqueo)
-- [ ] 7.9 Frontend: Task detail modal (transiciones, bloqueo, asignación)
-- [ ] 7.10 Frontend: Impediment management (causa, responsable)
+- [x] 7.1 Backend: WIPValidationService (conteo por usuario, configurable por proyecto)
+- [x] 7.2 Backend: KanbanFlowService (transiciones válidas)
+- [x] 7.3 Backend: PATCH /boards/tasks/{id}/transition (con validación WIP + audit log)
+- [x] 7.4 Backend: PATCH /boards/tasks/{id}/block, /boards/tasks/{id}/unblock
+- [x] 7.5 Backend: GET /boards/{sprintId}
+- [x] 7.6 Frontend: KanbanBoard con @dnd-kit (6 columnas)
+- [x] 7.7 Frontend: Optimistic update + rollback en drag & drop
+- [x] 7.8 Frontend: Alerta visual WIP (2/3 amarillo, 3/3 bloqueo)
+- [x] 7.9 Frontend: Task detail modal (transiciones, bloqueo, asignación)
+- [x] 7.10 Frontend: Impediment management (causa, responsable)
 - [ ] 7.11 Tests E2E con Playwright del flujo Kanban
 
 ## 8. Mensajería y Artefactos

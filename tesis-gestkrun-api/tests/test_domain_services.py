@@ -25,6 +25,15 @@ class TestWIPValidationService:
         assert result.current_count == 3
         assert result.max_allowed == 3
 
+    def test_validate_custom_limit(self):
+        result = self.service.validate(self.user_id, 2, wip_limit=2)
+        assert result is not None
+        assert result.max_allowed == 2
+
+    def test_can_take_task_custom_limit(self):
+        assert self.service.can_take_task(self.user_id, 3, wip_limit=5) is True
+        assert self.service.can_take_task(self.user_id, 5, wip_limit=5) is False
+
     def test_can_take_task_true(self):
         assert self.service.can_take_task(self.user_id, 2) is True
 
