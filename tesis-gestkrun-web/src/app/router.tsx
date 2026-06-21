@@ -1,7 +1,8 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { AuthGuard, GuestGuard, RoleGuard } from '../features/auth/AuthGuard'
 import { AdminLayout, AuthLayout, MainLayout } from './layouts'
+import { useAuthStore } from '../stores/auth'
 
 const LoginPage = lazy(() => import('../pages/LoginPage'))
 const RegisterPage = lazy(() => import('../pages/RegisterPage'))
@@ -16,8 +17,10 @@ const SprintListPage = lazy(() => import('../pages/SprintListPage'))
 const SprintPlanningPage = lazy(() => import('../pages/SprintPlanningPage'))
 const SprintDetailPage = lazy(() => import('../pages/SprintDetailPage'))
 const BoardPage = lazy(() => import('../pages/BoardPage'))
+const ProjectBoardPage = lazy(() => import('../pages/ProjectBoardPage'))
 const ChatPage = lazy(() => import('../pages/ChatPage'))
 const ArtifactsPage = lazy(() => import('../pages/ArtifactsPage'))
+const TasksPage = lazy(() => import('../pages/TasksPage'))
 
 function Loading() {
   return <div className="flex items-center justify-center h-screen">Cargando...</div>
@@ -88,8 +91,16 @@ const router = createBrowserRouter([
             element: <Suspense fallback={<Loading />}><SprintDetailPage /></Suspense>,
           },
           {
+            path: 'projects/:id/board',
+            element: <Suspense fallback={<Loading />}><ProjectBoardPage /></Suspense>,
+          },
+          {
             path: 'projects/:id/sprints/:sprintId/board',
             element: <Suspense fallback={<Loading />}><BoardPage /></Suspense>,
+          },
+          {
+            path: 'projects/:id/tasks',
+            element: <Suspense fallback={<Loading />}><TasksPage /></Suspense>,
           },
           {
             path: 'projects/:id/chat',
@@ -119,5 +130,7 @@ const router = createBrowserRouter([
 ])
 
 export function AppRouter() {
+  const initialize = useAuthStore((s) => s.initialize)
+  useEffect(() => { initialize() }, [initialize])
   return <RouterProvider router={router} />
 }

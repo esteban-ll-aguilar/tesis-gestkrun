@@ -17,6 +17,7 @@ from app.application.projects import (
 from app.domain.entities import User
 from app.domain.enums import Rol
 from app.domain.value_objects import ProjectId, UserId
+from app.infrastructure.persistence.models import UserModel
 from app.infrastructure.persistence.repositories import (
     ProjectAssignmentRepository,
     ProjectRepository,
@@ -127,6 +128,19 @@ async def assign_team(
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
+@router.delete("/{project_id}/assignments/{user_id}")
+async def remove_assignment(
+    project_id: str,
+    user_id: str,
+    current_user: User = Depends(require_role(Rol.PRODUCT_OWNER)),
+    db: AsyncSession = Depends(get_session),
+):
+    repo = ProjectAssignmentRepository(db)
+    await repo.remove(ProjectId(value=UUID(project_id)), UserId(value=UUID(user_id)))
+    await db.commit()
+    return {"message": "Assignment removed"}
+
+
 @router.get("/{project_id}/assignments")
 async def list_assignments(
     project_id: str,
@@ -135,7 +149,15 @@ async def list_assignments(
 ):
     repo = ProjectAssignmentRepository(db)
     assignments = await repo.list_by_project(ProjectId(value=UUID(project_id)))
-    return [
-        {"id": a.id, "user_id": str(a.user_id), "rol": a.rol.value}
-        for a in assignments
-    ]
+
+    result = []
+    for a in assignments:
+        user = await db.get(UserModel, str(a.user_id))
+        result.append({
+            "id": a.id,
+            "user_id": str(a.user_id),
+            "nombre": user.nombre if user else None,
+            "email": user.email if user else None,
+            "rol": a.rol.value,
+        })
+    return result

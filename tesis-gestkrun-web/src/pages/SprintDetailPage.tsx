@@ -21,14 +21,18 @@ export default function SprintDetailPage() {
     enabled: !!projectId && !!sprintId,
   });
 
+  const [error, setError] = useState('');
+
   const startMutation = useMutation({
     mutationFn: () => backlogService.startSprint(projectId!, sprintId!),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['sprint', projectId, sprintId] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['sprint', projectId, sprintId] }); setError(''); },
+    onError: (e: Error) => setError(e.message),
   });
 
   const closeMutation = useMutation({
     mutationFn: () => backlogService.closeSprint(projectId!, sprintId!),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['sprint', projectId, sprintId] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['sprint', projectId, sprintId] }); setError(''); },
+    onError: (e: Error) => setError(e.message),
   });
 
   if (isLoading || !sprint) return <div className="p-6">Cargando sprint...</div>;
@@ -47,10 +51,15 @@ export default function SprintDetailPage() {
           <div>
             <h1 className="text-2xl font-bold">{sprint.nombre}</h1>
             <p className="text-gray-500 mt-1">{sprint.objetivo}</p>
-            <div className="flex items-center gap-4 mt-3 text-sm text-gray-600">
-              <span className="flex items-center gap-1"><Calendar size={14} /> {sprint.fecha_inicio} → {sprint.fecha_fin}</span>
-              <span className="flex items-center gap-1"><Clock size={14} /> {sprint.duracion_dias} días</span>
-            </div>
+              <div className="flex items-center gap-4 mt-3 text-sm text-gray-600">
+                <span className="flex items-center gap-1"><Calendar size={14} /> {sprint.fecha_inicio} → {sprint.fecha_fin}</span>
+                <span className="flex items-center gap-1"><Clock size={14} /> {sprint.duracion_dias} días</span>
+                {sprint.meeting_link && (
+                  <a href={sprint.meeting_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                    Link reunión
+                  </a>
+                )}
+              </div>
           </div>
           <div className="flex items-center gap-2">
             <span className={`px-3 py-1 rounded text-sm font-medium ${
@@ -64,13 +73,13 @@ export default function SprintDetailPage() {
 
         <div className="flex gap-2 mt-4">
           {isPlanned && (
-            <button onClick={() => startMutation.mutate()} className="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-green-700">
-              <Play size={16} /> Iniciar Sprint
+            <button onClick={() => startMutation.mutate()} disabled={startMutation.isPending} className="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-green-700 disabled:bg-gray-300">
+              <Play size={16} /> {startMutation.isPending ? 'Iniciando...' : 'Iniciar Sprint'}
             </button>
           )}
           {isActive && (
-            <button onClick={() => closeMutation.mutate()} className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-700">
-              <Square size={16} /> Cerrar Sprint
+            <button onClick={() => closeMutation.mutate()} disabled={closeMutation.isPending} className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-700 disabled:bg-gray-300">
+              <Square size={16} /> {closeMutation.isPending ? 'Cerrando...' : 'Cerrar Sprint'}
             </button>
           )}
           {isActive && (
@@ -79,6 +88,7 @@ export default function SprintDetailPage() {
             </Link>
           )}
         </div>
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
       </div>
 
       <div className="bg-white rounded-lg shadow border border-gray-200 p-6">

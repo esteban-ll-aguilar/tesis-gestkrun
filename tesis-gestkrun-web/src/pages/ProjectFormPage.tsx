@@ -1,15 +1,12 @@
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { z } from 'zod'
 import { getProject, createProject, updateProject } from '../features/projects/projectService'
 
-const projectSchema = z.object({
-  nombre: z.string().min(1, 'El nombre es requerido').max(200, 'Máximo 200 caracteres'),
-  descripcion: z.string().max(1000, 'Máximo 1000 caracteres').optional().default(''),
-})
-
-type ProjectForm = z.infer<typeof projectSchema>
+type ProjectForm = {
+  nombre: string
+  descripcion: string | undefined
+}
 
 export default function ProjectFormPage() {
   const { id } = useParams()
@@ -32,7 +29,7 @@ export default function ProjectFormPage() {
 
   const mutation = useMutation({
     mutationFn: (data: ProjectForm) =>
-      isEdit ? updateProject(id!, data) : createProject(data.nombre, data.descripcion),
+      isEdit ? updateProject(id!, { nombre: data.nombre, descripcion: data.descripcion }) : createProject(data.nombre, data.descripcion ?? ''),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] })
       navigate('/projects')

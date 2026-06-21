@@ -1,16 +1,19 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.dependencies import get_current_user, get_session
-from app.domain.entities import TaskStateTransition, User
-from app.domain.enums import EstadoTarea
+from app.api.dependencies import get_current_user, get_session, require_any_role, require_role
+from app.domain.entities import Task, TaskStateTransition, User
+from app.domain.enums import EstadoTarea, Rol
 from app.domain.services import KanbanFlowService, WIPValidationService
-from app.domain.value_objects import SprintId, TaskId
+from app.domain.value_objects import HistoriaUsuarioId, ProjectId, SprintId, TaskId, UserId, ModuleId
 from app.infrastructure.persistence.repositories import (
+    ModuleDeveloperRepository,
+    ModuleRepository,
+    SprintRepository,
     TaskRepository,
     TaskStateTransitionRepository,
 )
@@ -25,8 +28,54 @@ class TransitionRequest(BaseModel):
     reason: str | None = None
 
 
+class AssignRequest(BaseModel):
+    user_id: str
+
+
+class CreateTaskRequest(BaseModel):
+    historia_id: str
+    titulo: str
+    descripcion: str = ""
+
+
 class BlockRequest(BaseModel):
     reason: str
+
+
+@router.get("/project/{project_id}")
+async def get_project_board(
+    project_id: str,
+    sprint_id: str | None = Query(None),
+    assigned_to: str | None = Query(None),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_session),
+):
+    task_repo = TaskRepository(db)
+    sprint_repo = SprintRepository(db)
+
+    if sprint_id:
+        tasks = await task_repo.list_by_sprint(SprintId(value=UUID(sprint_id)))
+    elif assigned_to:
+        tasks = await task_repo.list_by_assigned_user(UserId(value=UUID(assigned_to)))
+    else:
+        sprints = await sprint_repo.list_by_project(ProjectId(value=UUID(project_id)))
+        tasks = await task_repo.list_by_sprints([s.id for s in sprints if s.deleted_at is None])
+
+    columns = {estado.value: [] for estado in EstadoTarea}
+    for task in tasks:
+        columns[task.estado.value].append({
+            "id": str(task.id),
+            "titulo": task.titulo,
+            "descripcion": task.descripcion,
+            "estado": task.estado.value,
+            "assigned_to": str(task.assigned_to) if task.assigned_to else None,
+            "fecha_limite": task.fecha_limite.isoformat() if task.fecha_limite else None,
+            "fecha_creacion": task.fecha_creacion.isoformat(),
+        })
+    return {
+        "project_id": project_id,
+        "columns": {k: {"items": v, "count": len(v)} for k, v in columns.items()},
+    }
 
 
 @router.get("/{sprint_id}")
@@ -54,6 +103,57 @@ async def get_board(
     }
 
 
+@router.post("/tasks")
+async def create_task(
+    body: CreateTaskRequest,
+    current_user: User = Depends(require_any_role(Rol.ADMIN, Rol.PRODUCT_OWNER, Rol.SCRUM_MASTER, Rol.DEVELOPER)),
+    db: AsyncSession = Depends(get_session),
+):
+    task_repo = TaskRepository(db)
+    task = Task.create(
+        historia_usuario_id=HistoriaUsuarioId(value=UUID(body.historia_id)),
+        titulo=body.titulo,
+        descripcion=body.descripcion,
+    )
+    await task_repo.save(task)
+    return {
+        "id": str(task.id),
+        "historia_id": body.historia_id,
+        "titulo": task.titulo,
+        "descripcion": task.descripcion,
+        "estado": task.estado.value,
+        "assigned_to": None,
+    }
+
+
+@router.patch("/tasks/{task_id}/assign")
+async def assign_task(
+    task_id: str,
+    body: AssignRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_session),
+):
+    task_repo = TaskRepository(db)
+    task = await task_repo.get_by_id(TaskId(value=UUID(task_id)))
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    task.assign_to(UserId(value=UUID(body.user_id)))
+    await task_repo.save(task)
+    return {"id": str(task.id), "assigned_to": body.user_id}
+
+
+def _check_task_permission(task, current_user: User) -> None:
+    if current_user.rol in (Rol.ADMIN, Rol.PRODUCT_OWNER, Rol.SCRUM_MASTER):
+        return
+    if current_user.rol == Rol.DEVELOPER:
+        if task.assigned_to and task.assigned_to != current_user.id:
+            raise HTTPException(
+                status_code=403,
+                detail="Solo puedes modificar tus propias tareas",
+            )
+        return
+
+
 @router.patch("/tasks/{task_id}/transition")
 async def transition_task(
     task_id: str,
@@ -67,6 +167,8 @@ async def transition_task(
     task = await task_repo.get_by_id(TaskId(value=UUID(task_id)))
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+
+    _check_task_permission(task, current_user)
 
     to_estado = EstadoTarea(body.to_estado)
     flow_service = KanbanFlowService()
@@ -140,6 +242,8 @@ async def block_task(
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
+    _check_task_permission(task, current_user)
+
     old_estado = task.estado
     task.block(body.reason, current_user.id)
 
@@ -175,6 +279,8 @@ async def unblock_task(
     task = await task_repo.get_by_id(TaskId(value=UUID(task_id)))
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+
+    _check_task_permission(task, current_user)
 
     old_estado = task.estado
     if old_estado != EstadoTarea.BLOQUEADO:

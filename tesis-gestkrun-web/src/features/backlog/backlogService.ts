@@ -1,4 +1,4 @@
-import { http } from '../../services/http';
+import http from '../../services/http';
 
 export interface EpicaDTO {
   id: string;
@@ -8,6 +8,7 @@ export interface EpicaDTO {
   prioridad: string;
   estado: string;
   orden: number;
+  modulo_id: string | null;
 }
 
 export interface HistoriaDTO {
@@ -20,6 +21,8 @@ export interface HistoriaDTO {
   prioridad: string;
   estimacion: number;
   orden: number;
+  sprint_id: string | null;
+  sprint_nombre: string | null;
 }
 
 export interface HistoriaWithEpica {
@@ -36,6 +39,7 @@ export interface SprintDTO {
   fecha_inicio: string;
   fecha_fin: string;
   estado: string;
+  meeting_link?: string;
 }
 
 export interface SprintEventoDTO {
@@ -52,10 +56,10 @@ export const backlogService = {
   getBacklog: (projectId: string) =>
     http.get<HistoriaWithEpica[]>(`/projects/${projectId}/backlog`).then(r => r.data),
 
-  createEpica: (projectId: string, data: { titulo: string; descripcion?: string; prioridad?: string }) =>
+  createEpica: (projectId: string, data: { titulo: string; descripcion?: string; prioridad?: string; modulo_id?: string | null }) =>
     http.post<EpicaDTO>(`/projects/${projectId}/backlog/epicas`, data).then(r => r.data),
 
-  updateEpica: (projectId: string, epicaId: string, data: { titulo?: string; descripcion?: string; prioridad?: string }) =>
+  updateEpica: (projectId: string, epicaId: string, data: { titulo?: string; descripcion?: string; prioridad?: string; modulo_id?: string | null }) =>
     http.patch<EpicaDTO>(`/projects/${projectId}/backlog/epicas/${epicaId}`, data).then(r => r.data),
 
   deleteEpica: (projectId: string, epicaId: string) =>
@@ -64,7 +68,7 @@ export const backlogService = {
   createHistoria: (projectId: string, data: { epica_id: string; titulo: string; descripcion?: string; criterios_aceptacion?: string; prioridad?: string; estimacion?: number; modulo_id?: string | null }) =>
     http.post<HistoriaDTO>(`/projects/${projectId}/backlog/historias`, data).then(r => r.data),
 
-  updateHistoria: (projectId: string, historiaId: string, data: { titulo?: string; descripcion?: string; criterios_aceptacion?: string; prioridad?: string; estimacion?: number }) =>
+  updateHistoria: (projectId: string, historiaId: string, data: { titulo?: string; descripcion?: string; criterios_aceptacion?: string; prioridad?: string; estimacion?: number; modulo_id?: string | null }) =>
     http.patch<HistoriaDTO>(`/projects/${projectId}/backlog/historias/${historiaId}`, data).then(r => r.data),
 
   deleteHistoria: (projectId: string, historiaId: string) =>
@@ -79,7 +83,7 @@ export const backlogService = {
   getSprint: (projectId: string, sprintId: string) =>
     http.get<SprintDTO>(`/projects/${projectId}/sprints/${sprintId}`).then(r => r.data),
 
-  planSprint: (projectId: string, data: { nombre: string; objetivo?: string; duracion_dias?: number; fecha_inicio: string }) =>
+  planSprint: (projectId: string, data: { nombre: string; objetivo?: string; duracion_dias?: number; fecha_inicio: string; historia_ids?: string[]; meeting_link?: string }) =>
     http.post<SprintDTO>(`/projects/${projectId}/sprints`, data).then(r => r.data),
 
   startSprint: (projectId: string, sprintId: string) =>
@@ -96,4 +100,7 @@ export const backlogService = {
 
   listEventos: (projectId: string, sprintId: string) =>
     http.get<SprintEventoDTO[]>(`/projects/${projectId}/sprints/${sprintId}/eventos`).then(r => r.data),
+
+  createTask: (historiaId: string, data: { titulo: string; descripcion?: string }) =>
+    http.post(`/boards/tasks`, { historia_id: historiaId, ...data }).then(r => r.data),
 };

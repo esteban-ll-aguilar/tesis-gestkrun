@@ -7,6 +7,7 @@ from app.domain.entities import (
     HistoriaUsuario,
     Message,
     Module,
+    ModuleDeveloper,
     Project,
     ProjectAssignment,
     Sprint,
@@ -91,6 +92,23 @@ class IModuleRepository(ABC):
     async def delete(self, module_id: ModuleId) -> None: ...
 
 
+class IModuleDeveloperRepository(ABC):
+    @abstractmethod
+    async def save(self, assignment: ModuleDeveloper) -> None: ...
+
+    @abstractmethod
+    async def list_by_module(self, module_id: ModuleId) -> list[ModuleDeveloper]: ...
+
+    @abstractmethod
+    async def list_by_user(self, user_id: UserId) -> list[ModuleDeveloper]: ...
+
+    @abstractmethod
+    async def list_by_project(self, project_id: ProjectId) -> list[ModuleDeveloper]: ...
+
+    @abstractmethod
+    async def remove(self, module_id: ModuleId, user_id: UserId) -> None: ...
+
+
 class IEpicaRepository(ABC):
     @abstractmethod
     async def save(self, epica: Epica) -> None: ...
@@ -139,6 +157,9 @@ class ISprintRepository(ABC):
     async def get_active_by_project(self, project_id: ProjectId) -> Sprint | None: ...
 
     @abstractmethod
+    async def list_by_ids(self, sprint_ids: list[SprintId]) -> list[Sprint]: ...
+
+    @abstractmethod
     async def delete(self, sprint_id: SprintId) -> None: ...
 
 
@@ -161,12 +182,20 @@ class ITaskRepository(ABC):
     async def list_by_sprint(self, sprint_id: SprintId) -> list[Task]: ...
 
     @abstractmethod
+    async def list_by_sprints(self, sprint_ids: list[SprintId]) -> list[Task]: ...
+
+    @abstractmethod
     async def list_by_assigned_user(
         self, user_id: UserId, estado: str | None = None,
     ) -> list[Task]: ...
 
     @abstractmethod
     async def count_by_user_and_estado(self, user_id: UserId, estado: str) -> int: ...
+
+    @abstractmethod
+    async def list_by_historia_ids(
+        self, historia_ids: list[HistoriaUsuarioId],
+    ) -> list[Task]: ...
 
     @abstractmethod
     async def delete(self, task_id: TaskId) -> None: ...

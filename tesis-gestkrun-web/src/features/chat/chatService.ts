@@ -1,9 +1,10 @@
-import { http } from '../../services/http';
+import http from '../../services/http';
 
 export interface MessageDTO {
   id: string;
   contenido: string;
   sender_id: string;
+  sender_nombre: string;
   tipo: string;
   fecha_envio: string;
 }

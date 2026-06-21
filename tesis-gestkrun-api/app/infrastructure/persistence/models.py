@@ -122,6 +122,20 @@ class ModuleModel(Base, AuditMixin, SoftDeleteMixin):
     )
 
 
+class ModuleDeveloperModel(Base, SoftDeleteMixin):
+    __tablename__ = "module_developers"
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=expression.text("gen_random_uuid()")
+    )
+    module_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("modules.id"), nullable=False
+    )
+    user_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("users.id"), nullable=False
+    )
+
+
 class EpicaModel(Base, AuditMixin, SoftDeleteMixin):
     __tablename__ = "epicas"
 
@@ -140,6 +154,9 @@ class EpicaModel(Base, AuditMixin, SoftDeleteMixin):
     )
     estado: Mapped[str] = mapped_column(String(20), nullable=False, server_default="ACTIVA")
     orden: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    modulo_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("modules.id"), nullable=True
+    )
 
 
 class HistoriaUsuarioModel(Base, AuditMixin, SoftDeleteMixin):
@@ -182,6 +199,7 @@ class SprintModel(Base, AuditMixin, SoftDeleteMixin):
     duracion_dias: Mapped[int] = mapped_column(Integer, nullable=False)
     fecha_inicio: Mapped[datetime] = mapped_column(Date, nullable=False)
     fecha_fin: Mapped[datetime] = mapped_column(Date, nullable=False)
+    meeting_link: Mapped[str] = mapped_column(Text, nullable=False, server_default="")
     estado: Mapped[EstadoSprint] = mapped_column(
         Enum(EstadoSprint, name="estado_sprint_enum", create_type=True),
         nullable=False,

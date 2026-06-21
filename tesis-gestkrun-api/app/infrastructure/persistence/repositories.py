@@ -11,6 +11,7 @@ from app.domain.entities import (
     HistoriaUsuario,
     Message,
     Module,
+    ModuleDeveloper,
     Project,
     ProjectAssignment,
     Sprint,
@@ -25,6 +26,7 @@ from app.domain.repositories import (
     IEpicaRepository,
     IHistoriaUsuarioRepository,
     IMessageRepository,
+    IModuleDeveloperRepository,
     IModuleRepository,
     IProjectAssignmentRepository,
     IProjectRepository,
@@ -56,6 +58,7 @@ from app.infrastructure.persistence.models import (
     EpicaModel,
     HistoriaUsuarioModel,
     MessageModel,
+    ModuleDeveloperModel,
     ModuleModel,
     ProjectAssignmentModel,
     ProjectModel,
@@ -248,6 +251,61 @@ class ModuleRepository(IModuleRepository):
             await self.session.delete(model)
 
 
+class ModuleDeveloperRepository(IModuleDeveloperRepository):
+    def __init__(self, session: AsyncSession):
+        self.session = session
+
+    async def save(self, assig: ModuleDeveloper) -> None:
+        model = ModuleDeveloperModel(
+            id=assig.id,
+            module_id=str(assig.module_id),
+            user_id=str(assig.user_id),
+            deleted_at=assig.deleted_at,
+        )
+        await self.session.merge(model)
+
+    async def list_by_module(self, module_id: ModuleId) -> list[ModuleDeveloper]:
+        result = await self.session.execute(
+            select(ModuleDeveloperModel).where(
+                ModuleDeveloperModel.module_id == str(module_id),
+                ModuleDeveloperModel.deleted_at.is_(None),
+            )
+        )
+        return [_module_dev_from_model(m) for m in result.scalars()]
+
+    async def list_by_user(self, user_id: UserId) -> list[ModuleDeveloper]:
+        result = await self.session.execute(
+            select(ModuleDeveloperModel).where(
+                ModuleDeveloperModel.user_id == str(user_id),
+                ModuleDeveloperModel.deleted_at.is_(None),
+            )
+        )
+        return [_module_dev_from_model(m) for m in result.scalars()]
+
+    async def list_by_project(self, project_id: ProjectId) -> list[ModuleDeveloper]:
+        result = await self.session.execute(
+            select(ModuleDeveloperModel).join(
+                ModuleModel, ModuleDeveloperModel.module_id == ModuleModel.id
+            ).where(
+                ModuleModel.project_id == str(project_id),
+                ModuleDeveloperModel.deleted_at.is_(None),
+                ModuleModel.deleted_at.is_(None),
+            )
+        )
+        return [_module_dev_from_model(m) for m in result.scalars()]
+
+    async def remove(self, module_id: ModuleId, user_id: UserId) -> None:
+        result = await self.session.execute(
+            select(ModuleDeveloperModel).where(
+                ModuleDeveloperModel.module_id == str(module_id),
+                ModuleDeveloperModel.user_id == str(user_id),
+            )
+        )
+        model = result.scalar_one_or_none()
+        if model:
+            model.deleted_at = sa_func.now()
+
+
 class EpicaRepository(IEpicaRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -261,9 +319,10 @@ class EpicaRepository(IEpicaRepository):
             prioridad=epica.prioridad,
             estado=epica.estado,
             orden=epica.orden,
+            modulo_id=str(epica.modulo_id) if epica.modulo_id else None,
             deleted_at=epica.deleted_at,
         )
-        self.session.add(model)
+        await self.session.merge(model)
 
     async def get_by_id(self, epica_id: EpicaId) -> Epica | None:
         result = await self.session.execute(
@@ -367,9 +426,10 @@ class SprintRepository(ISprintRepository):
             fecha_inicio=sprint.fecha_inicio,
             fecha_fin=sprint.fecha_fin,
             estado=sprint.estado,
+            meeting_link=sprint.meeting_link,
             deleted_at=sprint.deleted_at,
         )
-        self.session.add(model)
+        await self.session.merge(model)
 
     async def get_by_id(self, sprint_id: SprintId) -> Sprint | None:
         result = await self.session.execute(
@@ -384,6 +444,13 @@ class SprintRepository(ISprintRepository):
                 SprintModel.project_id == str(project_id),
                 SprintModel.deleted_at.is_(None),
             ).order_by(SprintModel.fecha_inicio.desc())
+        )
+        return [_sprint_from_model(m) for m in result.scalars()]
+
+    async def list_by_ids(self, sprint_ids: list[SprintId]) -> list[Sprint]:
+        ids = [str(s) for s in sprint_ids]
+        result = await self.session.execute(
+            select(SprintModel).where(SprintModel.id.in_(ids))
         )
         return [_sprint_from_model(m) for m in result.scalars()]
 
@@ -450,7 +517,7 @@ class TaskRepository(ITaskRepository):
             fecha_limite=task.fecha_limite,
             deleted_at=task.deleted_at,
         )
-        self.session.add(model)
+        await self.session.merge(model)
 
     async def get_by_id(self, task_id: TaskId) -> Task | None:
         result = await self.session.execute(
@@ -468,6 +535,16 @@ class TaskRepository(ITaskRepository):
         )
         return [_task_from_model(m) for m in result.scalars()]
 
+    async def list_by_sprints(self, sprint_ids: list[SprintId]) -> list[Task]:
+        str_ids = [str(s) for s in sprint_ids]
+        result = await self.session.execute(
+            select(TaskModel).where(
+                TaskModel.sprint_id.in_(str_ids),
+                TaskModel.deleted_at.is_(None),
+            )
+        )
+        return [_task_from_model(m) for m in result.scalars()]
+
     async def list_by_assigned_user(
         self, user_id: UserId, estado: str | None = None,
     ) -> list[Task]:
@@ -478,6 +555,18 @@ class TaskRepository(ITaskRepository):
         if estado:
             query = query.where(TaskModel.estado == estado)
         result = await self.session.execute(query)
+        return [_task_from_model(m) for m in result.scalars()]
+
+    async def list_by_historia_ids(
+        self, historia_ids: list[HistoriaUsuarioId],
+    ) -> list[Task]:
+        str_ids = [str(h) for h in historia_ids]
+        result = await self.session.execute(
+            select(TaskModel).where(
+                TaskModel.historia_usuario_id.in_(str_ids),
+                TaskModel.deleted_at.is_(None),
+            )
+        )
         return [_task_from_model(m) for m in result.scalars()]
 
     async def count_by_user_and_estado(self, user_id: UserId, estado: str) -> int:
@@ -672,6 +761,15 @@ def _module_from_model(model: ModuleModel) -> Module:
     )
 
 
+def _module_dev_from_model(model: ModuleDeveloperModel) -> ModuleDeveloper:
+    return ModuleDeveloper(
+        id=model.id,
+        module_id=ModuleId(value=UUID(model.module_id)),
+        user_id=UserId(value=UUID(model.user_id)),
+        deleted_at=model.deleted_at,
+    )
+
+
 def _epica_from_model(model: EpicaModel) -> Epica:
     return Epica(
         id=EpicaId(value=UUID(model.id)),
@@ -681,6 +779,7 @@ def _epica_from_model(model: EpicaModel) -> Epica:
         prioridad=model.prioridad,
         estado=model.estado,
         orden=model.orden,
+        modulo_id=ModuleId(value=UUID(model.modulo_id)) if model.modulo_id else None,
         deleted_at=model.deleted_at,
     )
 
@@ -710,6 +809,7 @@ def _sprint_from_model(model: SprintModel) -> Sprint:
         fecha_inicio=model.fecha_inicio,
         fecha_fin=model.fecha_fin,
         estado=model.estado,
+        meeting_link=model.meeting_link,
         deleted_at=model.deleted_at,
     )
 

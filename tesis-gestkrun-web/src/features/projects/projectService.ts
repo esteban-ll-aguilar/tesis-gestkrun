@@ -1,5 +1,4 @@
 import http from '../../services/http'
-import type { Project } from '../../types'
 
 export interface ProjectDTO {
   id: string
@@ -38,6 +37,7 @@ export interface AssignmentDTO {
   user_id: string
   rol: string
   nombre?: string
+  email?: string
 }
 
 export async function listAssignments(projectId: string): Promise<AssignmentDTO[]> {
@@ -48,4 +48,19 @@ export async function listAssignments(projectId: string): Promise<AssignmentDTO[
 export async function assignTeam(projectId: string, userId: string, rol: string): Promise<AssignmentDTO> {
   const { data } = await http.post(`/projects/${projectId}/assignments`, { user_id: userId, rol })
   return data
+}
+
+export async function removeAssignment(projectId: string, userId: string): Promise<void> {
+  await http.delete(`/projects/${projectId}/assignments/${userId}`)
+}
+
+export const projectService = {
+  listProjects,
+  getProject,
+  createProject,
+  updateProject,
+  deleteProject,
+  listAssignments,
+  assignTeam,
+  removeAssignment,
 }

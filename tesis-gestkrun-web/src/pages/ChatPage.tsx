@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { chatService, MessageDTO } from '../features/chat/chatService';
+import { chatService } from '../features/chat/chatService';
+import type { MessageDTO } from '../features/chat/chatService';
 import { Send } from 'lucide-react';
 
 export default function ChatPage() {
@@ -77,11 +78,11 @@ export default function ChatPage() {
           {allMessages.map(m => (
             <div key={m.id} className="flex gap-2">
               <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium text-blue-700 shrink-0">
-                {m.sender_id.slice(0, 2).toUpperCase()}
+                {(m.sender_nombre || m.sender_id).slice(0, 2).toUpperCase()}
               </div>
               <div>
                 <p className="text-xs text-gray-500 mb-0.5">
-                  {m.sender_id.slice(0, 8)}... &middot; {new Date(m.fecha_envio).toLocaleTimeString()}
+                  {m.sender_nombre || m.sender_id.slice(0, 8)} &middot; {new Date(m.fecha_envio).toLocaleTimeString()}
                 </p>
                 <p className="text-sm bg-gray-50 rounded-lg p-2">{m.contenido}</p>
               </div>

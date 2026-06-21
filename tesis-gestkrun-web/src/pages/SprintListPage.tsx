@@ -3,9 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { backlogService } from '../features/backlog/backlogService';
 import type { SprintDTO } from '../features/backlog/backlogService';
 import { Plus } from 'lucide-react';
+import { useAuthStore } from '../stores/auth';
 
 export default function SprintListPage() {
   const { id: projectId } = useParams<{ id: string }>();
+  const hasRole = useAuthStore((s) => s.hasRole);
   const { data: sprints, isLoading } = useQuery({
     queryKey: ['sprints', projectId],
     queryFn: () => backlogService.listSprints(projectId!),
@@ -18,9 +20,11 @@ export default function SprintListPage() {
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Sprints</h1>
-        <Link to={`/projects/${projectId}/sprints/plan`} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
-          <Plus size={18} /> Planificar Sprint
-        </Link>
+        {hasRole('SCRUM_MASTER') && (
+          <Link to={`/projects/${projectId}/sprints/plan`} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
+            <Plus size={18} /> Planificar Sprint
+          </Link>
+        )}
       </div>
 
       <div className="space-y-3">

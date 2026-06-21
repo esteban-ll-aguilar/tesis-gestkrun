@@ -3,7 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { backlogService } from '../features/backlog/backlogService';
 import type { HistoriaWithEpica } from '../features/backlog/backlogService';
+import http from '../services/http';
 import { ArrowLeft } from 'lucide-react';
+
+interface ModuleDTO {
+  id: string
+  nombre: string
+}
 
 export default function SprintPlanningPage() {
   const { id: projectId } = useParams<{ id: string }>();
@@ -14,7 +20,9 @@ export default function SprintPlanningPage() {
   const [objetivo, setObjetivo] = useState('');
   const [duracionDias, setDuracionDias] = useState(14);
   const [fechaInicio, setFechaInicio] = useState(new Date().toISOString().slice(0, 10));
+  const [meetingLink, setMeetingLink] = useState('');
   const [selectedHistoriaIds, setSelectedHistoriaIds] = useState<Set<string>>(new Set());
+  const [moduloFilter, setModuloFilter] = useState<string>('');
 
   const { data: backlog, isLoading } = useQuery({
     queryKey: ['backlog', projectId],
@@ -22,8 +30,21 @@ export default function SprintPlanningPage() {
     enabled: !!projectId,
   });
 
+  const { data: modules = [] } = useQuery({
+    queryKey: ['modules', projectId],
+    queryFn: () => http.get<ModuleDTO[]>(`/projects/${projectId}/modules`).then(r => r.data),
+    enabled: !!projectId,
+  });
+
   const planMutation = useMutation({
-    mutationFn: () => backlogService.planSprint(projectId!, { nombre, objetivo, duracion_dias: duracionDias, fecha_inicio: fechaInicio }),
+    mutationFn: () => backlogService.planSprint(projectId!, {
+      nombre,
+      objetivo,
+      duracion_dias: duracionDias,
+      fecha_inicio: fechaInicio,
+      historia_ids: Array.from(selectedHistoriaIds),
+      meeting_link: meetingLink,
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sprints', projectId] });
       navigate(`/projects/${projectId}/sprints`);
@@ -31,6 +52,13 @@ export default function SprintPlanningPage() {
   });
 
   if (isLoading || !backlog) return <div className="p-6">Cargando backlog...</div>;
+
+  const filteredBacklog = moduloFilter
+    ? backlog.map((item: HistoriaWithEpica) => ({
+        ...item,
+        historias: item.historias.filter(h => h.modulo_id === moduloFilter),
+      })).filter((item: HistoriaWithEpica) => item.historias.length > 0)
+    : backlog;
 
   const totalEstimacion = backlog
     .flatMap(b => b.historias)
@@ -72,9 +100,14 @@ export default function SprintPlanningPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de inicio</label>
               <input type="date" value={fechaInicio} onChange={e => setFechaInicio(e.target.value)} className="w-full p-2 border rounded" />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Link de reunión (opcional)</label>
+              <input value={meetingLink} onChange={e => setMeetingLink(e.target.value)} className="w-full p-2 border rounded" placeholder="https://meet.google.com/..." />
+            </div>
 
             <div className="pt-4">
               <p className="text-sm text-gray-600 mb-1">Estimación seleccionada: <strong>{totalEstimacion} pts</strong></p>
+              <p className="text-sm text-gray-600 mb-1">Historias seleccionadas: <strong>{selectedHistoriaIds.size}</strong></p>
               <button
                 onClick={() => planMutation.mutate()}
                 disabled={!nombre || !selectedHistoriaIds.size || planMutation.isPending}
@@ -82,15 +115,26 @@ export default function SprintPlanningPage() {
               >
                 {planMutation.isPending ? 'Creando...' : 'Crear Sprint'}
               </button>
+              {planMutation.isError && (
+                <p className="text-red-500 text-sm mt-2">Error al crear el sprint</p>
+              )}
             </div>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold mb-4">Historias del Backlog</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Historias del Backlog</h2>
+            <select value={moduloFilter} onChange={e => setModuloFilter(e.target.value)} className="border rounded px-2 py-1 text-sm">
+              <option value="">Todos los módulos</option>
+              {modules.map((m) => (
+                <option key={m.id} value={m.id}>{m.nombre}</option>
+              ))}
+            </select>
+          </div>
           <p className="text-sm text-gray-500 mb-3">Selecciona las historias para incluir en el sprint</p>
           <div className="space-y-4 max-h-[500px] overflow-y-auto">
-            {backlog.map((item: HistoriaWithEpica) => (
+            {filteredBacklog.map((item: HistoriaWithEpica) => (
               <div key={item.epica.id}>
                 <h3 className="font-medium text-sm text-gray-700 mb-1">{item.epica.titulo}</h3>
                 {item.historias.map(h => (
@@ -102,6 +146,7 @@ export default function SprintPlanningPage() {
                       className="rounded"
                     />
                     <span className="flex-1 text-sm">{h.titulo}</span>
+                    {h.modulo_id && <span className="text-xs text-gray-400">{modules.find(m => m.id === h.modulo_id)?.nombre || ''}</span>}
                     <span className="text-xs text-gray-500">{h.estimacion} pts</span>
                     <span className={`px-1.5 py-0.5 rounded text-xs ${prioridadColor(h.prioridad)}`}>{h.prioridad}</span>
                   </label>

@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { listProjects, deleteProject } from '../features/projects/projectService'
+import { useAuthStore } from '../stores/auth'
 
 export default function ProjectListPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const hasRole = useAuthStore((s) => s.hasRole)
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
@@ -22,12 +24,14 @@ export default function ProjectListPage() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">Proyectos</h2>
-        <button
-          onClick={() => navigate('/projects/new')}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Nuevo proyecto
-        </button>
+        {hasRole('PRODUCT_OWNER') && (
+          <button
+            onClick={() => navigate('/projects/new')}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Nuevo proyecto
+          </button>
+        )}
       </div>
 
       <div className="overflow-x-auto">
@@ -66,12 +70,14 @@ export default function ProjectListPage() {
                   >
                     Ver
                   </button>
-                  <button
-                    onClick={() => { if (confirm('¿Eliminar proyecto?')) deleteMutation.mutate(project.id) }}
-                    className="text-red-600 hover:underline text-sm"
-                  >
-                    Eliminar
-                  </button>
+                  {hasRole('PRODUCT_OWNER') && (
+                    <button
+                      onClick={() => { if (confirm('¿Eliminar proyecto?')) deleteMutation.mutate(project.id) }}
+                      className="text-red-600 hover:underline text-sm"
+                    >
+                      Eliminar
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

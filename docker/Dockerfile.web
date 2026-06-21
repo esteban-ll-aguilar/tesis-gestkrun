@@ -1,9 +1,9 @@
 FROM node:22-alpine AS builder
 
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
+COPY tesis-gestkrun-web/package.json tesis-gestkrun-web/pnpm-lock.yaml ./
 RUN corepack enable && pnpm install --frozen-lockfile
-COPY . .
+COPY tesis-gestkrun-web/ .
 RUN npm run build
 
 FROM nginx:alpine AS runner

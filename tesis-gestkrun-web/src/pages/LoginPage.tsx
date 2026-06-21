@@ -1,19 +1,15 @@
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
 import { useAuthStore } from '../stores/auth'
-import { setAccessToken } from '../services/http'
 
-const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Mínimo 6 caracteres'),
-})
-
-type LoginForm = z.infer<typeof loginSchema>
+type LoginForm = {
+  email: string
+  password: string
+}
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const setUser = useAuthStore((s) => s.setUser)
+  const setAuth = useAuthStore((s) => s.setAuth)
   const {
     register, handleSubmit, setError, formState: { errors, isSubmitting },
   } = useForm<LoginForm>()
@@ -30,8 +26,12 @@ export default function LoginPage() {
         throw new Error('Credenciales inválidas')
       }
       const json = await res.json()
-      setAccessToken(json.accessToken)
-      setUser({ id: '', nombre: '', email: data.email, rol: 'DEVELOPER', fechaRegistro: '' })
+      const userRes = await fetch('/api/v1/auth/me', {
+        headers: { Authorization: `Bearer ${json.accessToken}` },
+      })
+      if (!userRes.ok) throw new Error('Error al obtener usuario')
+      const user = await userRes.json()
+      setAuth(user, json.accessToken)
       navigate('/dashboard')
     } catch {
       setError('root', { message: 'Credenciales inválidas' })

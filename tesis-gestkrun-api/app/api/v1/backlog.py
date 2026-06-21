@@ -22,6 +22,8 @@ from app.domain.value_objects import EpicaId, HistoriaUsuarioId, ProjectId
 from app.infrastructure.persistence.repositories import (
     EpicaRepository,
     HistoriaUsuarioRepository,
+    SprintRepository,
+    TaskRepository,
 )
 
 router = APIRouter(prefix="/projects/{project_id}/backlog", tags=["backlog"])
@@ -31,12 +33,14 @@ class CreateEpicaRequest(BaseModel):
     titulo: str
     descripcion: str = ""
     prioridad: str = "MEDIA"
+    modulo_id: str | None = None
 
 
 class UpdateEpicaRequest(BaseModel):
     titulo: str | None = None
     descripcion: str | None = None
     prioridad: str | None = None
+    modulo_id: str | None = None
 
 
 class CreateHistoriaRequest(BaseModel):
@@ -70,7 +74,7 @@ async def get_backlog(
     db: AsyncSession = Depends(get_session),
 ):
     use_case = PrioritizeBacklogUseCase(
-        EpicaRepository(db), HistoriaUsuarioRepository(db)
+        EpicaRepository(db), HistoriaUsuarioRepository(db), TaskRepository(db), SprintRepository(db)
     )
     return await use_case.get_backlog(ProjectId(value=UUID(project_id)))
 
@@ -86,6 +90,7 @@ async def create_epica(
     return await use_case.execute(
         ProjectId(value=UUID(project_id)),
         body.titulo, body.descripcion, Prioridad(body.prioridad),
+        modulo_id=body.modulo_id,
     )
 
 
@@ -112,6 +117,7 @@ async def update_epica(
     result = await use_case.execute(
         EpicaId(value=UUID(epica_id)),
         titulo=body.titulo, descripcion=body.descripcion, prioridad=prioridad,
+        modulo_id=body.modulo_id,
     )
     if not result:
         raise HTTPException(status_code=404, detail="Epica not found")
@@ -149,11 +155,14 @@ async def create_historia(
     current_user: User = Depends(require_role(Rol.PRODUCT_OWNER)),
     db: AsyncSession = Depends(get_session),
 ):
+    epica_repo = EpicaRepository(db)
+    epica = await epica_repo.get_by_id(EpicaId(value=UUID(body.epica_id)))
+    modulo_id = body.modulo_id or (str(epica.modulo_id) if epica and epica.modulo_id else None)
     use_case = CreateHistoriaUsuarioUseCase(HistoriaUsuarioRepository(db))
     return await use_case.execute(
         EpicaId(value=UUID(body.epica_id)), body.titulo, body.descripcion,
         body.criterios_aceptacion, Prioridad(body.prioridad),
-        body.estimacion, body.modulo_id,
+        body.estimacion, modulo_id,
     )
 
 

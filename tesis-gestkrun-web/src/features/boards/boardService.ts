@@ -1,4 +1,4 @@
-import { http } from '../../services/http';
+import http from '../../services/http';
 
 export interface KanbanTaskDTO {
   id: string;
@@ -27,6 +27,11 @@ export const boardService = {
   transitionTask: (taskId: string, to_estado: string, reason?: string) =>
     http.patch<{ id: string; estado: string; transition: { from: string; to: string; timestamp: string } }>(
       `/boards/tasks/${taskId}/transition`, { to_estado, reason }
+    ).then(r => r.data),
+
+  assignTask: (taskId: string, userId: string) =>
+    http.patch<{ id: string; assigned_to: string }>(
+      `/boards/tasks/${taskId}/assign`, { user_id: userId }
     ).then(r => r.data),
 
   blockTask: (taskId: string, reason: string) =>

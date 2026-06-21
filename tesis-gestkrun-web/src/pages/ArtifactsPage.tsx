@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { artifactService, ArtifactDTO } from '../features/artifacts/artifactService';
+import { artifactService } from '../features/artifacts/artifactService';
+import type { ArtifactDTO } from '../features/artifacts/artifactService';
 import { Upload, FileText, Download, ChevronDown, ChevronRight } from 'lucide-react';
 
 export default function ArtifactsPage() {

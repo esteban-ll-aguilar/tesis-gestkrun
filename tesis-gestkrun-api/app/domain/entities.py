@@ -191,6 +191,7 @@ class Epica:
     prioridad: Prioridad
     estado: str
     orden: int
+    modulo_id: ModuleId | None = None
     deleted_at: datetime | None = None
 
     _events: list[DomainEvent] = field(default_factory=list, repr=False)
@@ -198,6 +199,7 @@ class Epica:
     @staticmethod
     def create(
         project_id: ProjectId, titulo: str, descripcion: str, prioridad: Prioridad, orden: int,
+        modulo_id: ModuleId | None = None,
     ) -> Epica:
         epica = Epica(
             id=EpicaId.generate(),
@@ -207,6 +209,7 @@ class Epica:
             prioridad=prioridad,
             estado="ACTIVA",
             orden=orden,
+            modulo_id=modulo_id,
         )
         epica._events.append(EpicaCreated(epica_id=epica.id, project_id=project_id, titulo=titulo))
         return epica
@@ -271,6 +274,7 @@ class Sprint:
     fecha_inicio: date
     fecha_fin: date
     estado: EstadoSprint
+    meeting_link: str = ""
     deleted_at: datetime | None = None
 
     _events: list[DomainEvent] = field(default_factory=list, repr=False)
@@ -282,6 +286,7 @@ class Sprint:
         objetivo: str,
         duracion_dias: int,
         fecha_inicio: date,
+        meeting_link: str = "",
     ) -> Sprint:
         fecha_fin = fecha_inicio + timedelta(days=duracion_dias)
         sprint = Sprint(
@@ -293,6 +298,7 @@ class Sprint:
             fecha_inicio=fecha_inicio,
             fecha_fin=fecha_fin,
             estado=EstadoSprint.PLANIFICADO,
+            meeting_link=meeting_link,
         )
         sprint._events.append(SprintPlanned(
             sprint_id=sprint.id, project_id=project_id, nombre=nombre,
@@ -475,6 +481,14 @@ class Artifact:
         events = list(self._events)
         self._events.clear()
         return events
+
+
+@dataclass
+class ModuleDeveloper:
+    id: str
+    module_id: ModuleId
+    user_id: UserId
+    deleted_at: datetime | None = None
 
 
 @dataclass

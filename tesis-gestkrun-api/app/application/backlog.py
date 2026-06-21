@@ -2,13 +2,14 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from uuid import UUID
 
-from app.domain.entities import Epica, HistoriaUsuario, Sprint, SprintEvento
+from app.domain.entities import Epica, HistoriaUsuario, Sprint, SprintEvento, Task
 from app.domain.enums import Prioridad, TipoEventoScrum
 from app.domain.repositories import (
     IEpicaRepository,
     IHistoriaUsuarioRepository,
     ISprintEventoRepository,
     ISprintRepository,
+    ITaskRepository,
 )
 from app.domain.value_objects import (
     EpicaId,
@@ -31,6 +32,7 @@ class EpicaResult:
     prioridad: str
     estado: str
     orden: int
+    modulo_id: str | None = None
 
 
 @dataclass
@@ -44,6 +46,8 @@ class HistoriaUsuarioResult:
     prioridad: str
     estimacion: int
     orden: int
+    sprint_id: str | None = None
+    sprint_nombre: str | None = None
 
 
 @dataclass
@@ -56,6 +60,7 @@ class SprintResult:
     fecha_inicio: str
     fecha_fin: str
     estado: str
+    meeting_link: str = ""
 
 
 @dataclass
@@ -75,10 +80,11 @@ class CreateEpicaUseCase:
 
     async def execute(
         self, project_id: ProjectId, titulo: str, descripcion: str,
-        prioridad: Prioridad,
+        prioridad: Prioridad, modulo_id: str | None = None,
     ) -> EpicaResult:
         max_orden = await self._repo.get_max_orden(project_id)
-        epica = Epica.create(project_id, titulo, descripcion, prioridad, max_orden + 1)
+        mid = ModuleId(value=UUID(modulo_id)) if modulo_id else None
+        epica = Epica.create(project_id, titulo, descripcion, prioridad, max_orden + 1, mid)
         await self._repo.save(epica)
         return _epica_result(epica)
 
@@ -99,6 +105,7 @@ class UpdateEpicaUseCase:
     async def execute(
         self, epica_id: EpicaId, titulo: str | None = None,
         descripcion: str | None = None, prioridad: Prioridad | None = None,
+        modulo_id: str | None = None,
     ) -> EpicaResult | None:
         epica = await self._repo.get_by_id(epica_id)
         if not epica:
@@ -109,6 +116,8 @@ class UpdateEpicaUseCase:
             epica.descripcion = descripcion
         if prioridad is not None:
             epica.prioridad = prioridad
+        if modulo_id is not None:
+            epica.modulo_id = ModuleId(value=UUID(modulo_id)) if modulo_id else None
         await self._repo.save(epica)
         return _epica_result(epica)
 
@@ -126,9 +135,11 @@ class DeleteEpicaUseCase:
 
 
 class PrioritizeBacklogUseCase:
-    def __init__(self, epica_repo: IEpicaRepository, hu_repo: IHistoriaUsuarioRepository):
+    def __init__(self, epica_repo: IEpicaRepository, hu_repo: IHistoriaUsuarioRepository, task_repo: ITaskRepository | None = None, sprint_repo: ISprintRepository | None = None):
         self._epica_repo = epica_repo
         self._hu_repo = hu_repo
+        self._task_repo = task_repo
+        self._sprint_repo = sprint_repo
 
     async def reorder_epicas(self, project_id: ProjectId, epica_ids: list[str]) -> None:
         for i, eid in enumerate(epica_ids):
@@ -144,14 +155,39 @@ class PrioritizeBacklogUseCase:
                 hu.orden = i + 1
                 await self._hu_repo.save(hu)
 
+    async def _get_sprint_info(self, historias: list[HistoriaUsuario]) -> dict[str, tuple[str | None, str | None]]:
+        info: dict[str, tuple[str | None, str | None]] = {str(h.id): (None, None) for h in historias}
+        if not self._task_repo:
+            return info
+        ids = [h.id for h in historias]
+        tasks = await self._task_repo.list_by_historia_ids(ids)
+        sprint_ids = list({t.sprint_id for t in tasks if t.sprint_id})
+        sprint_map: dict[str, str] = {}
+        if sprint_ids and self._sprint_repo:
+            sprints = await self._sprint_repo.list_by_ids(sprint_ids)
+            sprint_map = {str(s.id): s.nombre for s in sprints}
+        for t in tasks:
+            sid = str(t.sprint_id) if t.sprint_id else None
+            sname = sprint_map.get(str(t.sprint_id)) if t.sprint_id else None
+            info[str(t.historia_usuario_id)] = (sid, sname)
+        return info
+
     async def get_backlog(self, project_id: ProjectId) -> list[dict]:
         epicas = await self._epica_repo.list_by_project(project_id)
+        all_historias: list[HistoriaUsuario] = []
+        for e in epicas:
+            all_historias.extend(await self._hu_repo.list_by_epica(e.id))
+        sprint_info = await self._get_sprint_info(all_historias)
+
         result = []
         for e in epicas:
             historias = await self._hu_repo.list_by_epica(e.id)
             result.append({
                 "epica": _epica_result(e),
-                "historias": [_hu_result(h) for h in historias],
+                "historias": [
+                    _hu_result(h, sprint_info[str(h.id)][0], sprint_info[str(h.id)][1])
+                    for h in historias
+                ],
             })
         return result
 
@@ -230,9 +266,9 @@ class PlanSprintUseCase:
 
     async def execute(
         self, project_id: ProjectId, nombre: str, objetivo: str,
-        duracion_dias: int, fecha_inicio: date,
+        duracion_dias: int, fecha_inicio: date, meeting_link: str = "",
     ) -> SprintResult:
-        sprint = Sprint.plan(project_id, nombre, objetivo, duracion_dias, fecha_inicio)
+        sprint = Sprint.plan(project_id, nombre, objetivo, duracion_dias, fecha_inicio, meeting_link)
         await self._sprint_repo.save(sprint)
         return _sprint_result(sprint)
 
@@ -331,16 +367,18 @@ def _epica_result(e: Epica) -> EpicaResult:
         id=str(e.id), project_id=str(e.project_id), titulo=e.titulo,
         descripcion=e.descripcion, prioridad=e.prioridad.value,
         estado=e.estado, orden=e.orden,
+        modulo_id=str(e.modulo_id) if e.modulo_id else None,
     )
 
 
-def _hu_result(h: HistoriaUsuario) -> HistoriaUsuarioResult:
+def _hu_result(h: HistoriaUsuario, sprint_id: str | None = None, sprint_nombre: str | None = None) -> HistoriaUsuarioResult:
     return HistoriaUsuarioResult(
         id=str(h.id), epica_id=str(h.epica_id),
         modulo_id=str(h.modulo_id) if h.modulo_id else None,
         titulo=h.titulo, descripcion=h.descripcion,
         criterios_aceptacion=h.criterios_aceptacion,
         prioridad=h.prioridad.value, estimacion=int(h.estimacion), orden=h.orden,
+        sprint_id=sprint_id, sprint_nombre=sprint_nombre,
     )
 
 
@@ -349,7 +387,7 @@ def _sprint_result(s: Sprint) -> SprintResult:
         id=str(s.id), project_id=str(s.project_id), nombre=s.nombre,
         objetivo=s.objetivo, duracion_dias=s.duracion_dias,
         fecha_inicio=s.fecha_inicio.isoformat(), fecha_fin=s.fecha_fin.isoformat(),
-        estado=s.estado.value,
+        estado=s.estado.value, meeting_link=s.meeting_link,
     )
 
 

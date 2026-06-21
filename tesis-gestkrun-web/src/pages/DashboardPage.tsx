@@ -4,6 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, Legend,
 } from 'recharts';
+import type { PieLabelRenderProps } from 'recharts';
 import { projectService } from '../features/projects/projectService';
 import { dashboardService } from '../features/dashboard/dashboardService';
 import { CheckCircle, Clock, AlertTriangle, ListChecks } from 'lucide-react';
@@ -112,7 +113,7 @@ export default function DashboardPage() {
                     cx="50%"
                     cy="50%"
                     outerRadius={100}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }: PieLabelRenderProps) => `${name ?? ''} ${((percent ?? 0) * 100).toFixed(0)}%`}
                   >
                     {(distribution || []).map((_, i) => (
                       <Cell key={i} fill={COLORS[i % COLORS.length]} />

@@ -62,7 +62,7 @@ def upgrade() -> None:
         sa.Column("nombre", sa.String(150), nullable=False),
         sa.Column("email", sa.String(255), nullable=False),
         sa.Column("password_hash", sa.String(255), nullable=False),
-        sa.Column("rol", postgresql.ENUM(name="rol_enum"), nullable=False, server_default="DEVELOPER"),
+        sa.Column("rol", postgresql.ENUM(name="rol_enum", create_type=False), nullable=False, server_default="DEVELOPER"),
         sa.Column("fecha_registro", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
@@ -76,7 +76,7 @@ def upgrade() -> None:
         sa.Column("id", sa.String(36), primary_key=True, server_default=sa.text("gen_random_uuid()")),
         sa.Column("nombre", sa.String(200), nullable=False),
         sa.Column("descripcion", sa.Text, nullable=False, server_default=""),
-        sa.Column("estado", postgresql.ENUM(name="estado_proyecto_enum"), nullable=False, server_default="ACTIVO"),
+        sa.Column("estado", postgresql.ENUM(name="estado_proyecto_enum", create_type=False), nullable=False, server_default="ACTIVO"),
         sa.Column("fecha_inicio", sa.Date, nullable=False),
         sa.Column("wip_limit", sa.Integer, nullable=False, server_default="3"),
         sa.Column("owner_id", sa.String(36), sa.ForeignKey("users.id"), nullable=False),
@@ -92,7 +92,7 @@ def upgrade() -> None:
         sa.Column("id", sa.String(36), primary_key=True, server_default=sa.text("gen_random_uuid()")),
         sa.Column("project_id", sa.String(36), sa.ForeignKey("projects.id"), nullable=False),
         sa.Column("user_id", sa.String(36), sa.ForeignKey("users.id"), nullable=False),
-        sa.Column("rol", postgresql.ENUM(name="rol_enum"), nullable=False),
+        sa.Column("rol", postgresql.ENUM(name="rol_enum", create_type=False), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("created_by", sa.String(36), nullable=True),
@@ -106,7 +106,7 @@ def upgrade() -> None:
         sa.Column("project_id", sa.String(36), sa.ForeignKey("projects.id"), nullable=False),
         sa.Column("nombre", sa.String(200), nullable=False),
         sa.Column("descripcion", sa.Text, nullable=False, server_default=""),
-        sa.Column("estado", postgresql.ENUM(name="estado_modulo_enum"), nullable=False, server_default="ACTIVO"),
+        sa.Column("estado", postgresql.ENUM(name="estado_modulo_enum", create_type=False), nullable=False, server_default="ACTIVO"),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("created_by", sa.String(36), nullable=True),
@@ -120,7 +120,7 @@ def upgrade() -> None:
         sa.Column("project_id", sa.String(36), sa.ForeignKey("projects.id"), nullable=False),
         sa.Column("titulo", sa.String(200), nullable=False),
         sa.Column("descripcion", sa.Text, nullable=False, server_default=""),
-        sa.Column("prioridad", postgresql.ENUM(name="prioridad_enum"), nullable=False, server_default="MEDIA"),
+        sa.Column("prioridad", postgresql.ENUM(name="prioridad_enum", create_type=False), nullable=False, server_default="MEDIA"),
         sa.Column("estado", sa.String(20), nullable=False, server_default="ACTIVA"),
         sa.Column("orden", sa.Integer, nullable=False, server_default="0"),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
@@ -138,7 +138,7 @@ def upgrade() -> None:
         sa.Column("titulo", sa.String(200), nullable=False),
         sa.Column("descripcion", sa.Text, nullable=False, server_default=""),
         sa.Column("criterios_aceptacion", sa.Text, nullable=False, server_default=""),
-        sa.Column("prioridad", postgresql.ENUM(name="prioridad_enum"), nullable=False, server_default="MEDIA"),
+        sa.Column("prioridad", postgresql.ENUM(name="prioridad_enum", create_type=False), nullable=False, server_default="MEDIA"),
         sa.Column("estimacion", sa.Integer, nullable=False, server_default="0"),
         sa.Column("orden", sa.Integer, nullable=False, server_default="0"),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
@@ -157,7 +157,7 @@ def upgrade() -> None:
         sa.Column("duracion_dias", sa.Integer, nullable=False),
         sa.Column("fecha_inicio", sa.Date, nullable=False),
         sa.Column("fecha_fin", sa.Date, nullable=False),
-        sa.Column("estado", postgresql.ENUM(name="estado_sprint_enum"), nullable=False, server_default="PLANIFICADO"),
+        sa.Column("estado", postgresql.ENUM(name="estado_sprint_enum", create_type=False), nullable=False, server_default="PLANIFICADO"),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("created_by", sa.String(36), nullable=True),
@@ -169,7 +169,7 @@ def upgrade() -> None:
         "sprint_eventos",
         sa.Column("id", sa.String(36), primary_key=True, server_default=sa.text("gen_random_uuid()")),
         sa.Column("sprint_id", sa.String(36), sa.ForeignKey("sprints.id"), nullable=False),
-        sa.Column("tipo", postgresql.ENUM(name="tipo_evento_scrum_enum"), nullable=False),
+        sa.Column("tipo", postgresql.ENUM(name="tipo_evento_scrum_enum", create_type=False), nullable=False),
         sa.Column("fecha", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("notas", sa.Text, nullable=False, server_default=""),
         sa.Column("duracion_minutos", sa.Integer, nullable=False),
@@ -184,7 +184,7 @@ def upgrade() -> None:
         sa.Column("assigned_to", sa.String(36), sa.ForeignKey("users.id"), nullable=True),
         sa.Column("titulo", sa.String(200), nullable=False),
         sa.Column("descripcion", sa.Text, nullable=False, server_default=""),
-        sa.Column("estado", postgresql.ENUM(name="estado_tarea_enum"), nullable=False, server_default="PENDIENTE"),
+        sa.Column("estado", postgresql.ENUM(name="estado_tarea_enum", create_type=False), nullable=False, server_default="PENDIENTE"),
         sa.Column("fecha_creacion", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("fecha_limite", sa.Date, nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
@@ -197,13 +197,14 @@ def upgrade() -> None:
     op.execute(
         """
         CREATE TABLE task_state_transitions (
-            id VARCHAR(36) PRIMARY KEY DEFAULT gen_random_uuid(),
+            id VARCHAR(36) NOT NULL DEFAULT gen_random_uuid(),
             task_id VARCHAR(36) NOT NULL REFERENCES tasks(id),
             from_estado estado_tarea_enum NOT NULL,
             to_estado estado_tarea_enum NOT NULL,
             timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
             user_id VARCHAR(36) NOT NULL REFERENCES users(id),
-            reason TEXT
+            reason TEXT,
+            PRIMARY KEY (id, timestamp)
         ) PARTITION BY RANGE (timestamp)
         """
     )
@@ -295,7 +296,7 @@ def upgrade() -> None:
         sa.Column("sender_id", sa.String(36), sa.ForeignKey("users.id"), nullable=False),
         sa.Column("contenido", sa.Text, nullable=False),
         sa.Column("fecha_envio", sa.DateTime(timezone=True), server_default=sa.func.now()),
-        sa.Column("tipo", postgresql.ENUM(name="tipo_mensaje_enum"), nullable=False),
+        sa.Column("tipo", postgresql.ENUM(name="tipo_mensaje_enum", create_type=False), nullable=False),
     )
 
     op.create_table(
@@ -303,7 +304,7 @@ def upgrade() -> None:
         sa.Column("id", sa.String(36), primary_key=True, server_default=sa.text("gen_random_uuid()")),
         sa.Column("task_id", sa.String(36), sa.ForeignKey("tasks.id"), nullable=False),
         sa.Column("nombre", sa.String(255), nullable=False),
-        sa.Column("tipo", postgresql.ENUM(name="tipo_artefacto_enum"), nullable=False),
+        sa.Column("tipo", postgresql.ENUM(name="tipo_artefacto_enum", create_type=False), nullable=False),
         sa.Column("version_actual", sa.Integer, nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now()),

@@ -16,12 +16,14 @@ from app.application.backlog import (
     PlanSprintUseCase,
     StartSprintUseCase,
 )
-from app.domain.entities import User
+from app.domain.entities import User, Task
 from app.domain.enums import Rol, TipoEventoScrum
-from app.domain.value_objects import ProjectId, SprintId
+from app.domain.value_objects import HistoriaUsuarioId, ProjectId, SprintId
 from app.infrastructure.persistence.repositories import (
+    HistoriaUsuarioRepository,
     SprintEventoRepository,
     SprintRepository,
+    TaskRepository,
 )
 
 router = APIRouter(prefix="/projects/{project_id}/sprints", tags=["sprints"])
@@ -32,6 +34,8 @@ class PlanSprintRequest(BaseModel):
     objetivo: str = ""
     duracion_dias: int = 14
     fecha_inicio: date
+    historia_ids: list[str] = []
+    meeting_link: str = ""
 
 
 class CreateEventoRequest(BaseModel):
@@ -48,10 +52,29 @@ async def plan_sprint(
     db: AsyncSession = Depends(get_session),
 ):
     use_case = PlanSprintUseCase(SprintRepository(db))
-    return await use_case.execute(
+    sprint = await use_case.execute(
         ProjectId(value=UUID(project_id)),
         body.nombre, body.objetivo, body.duracion_dias, body.fecha_inicio,
+        meeting_link=body.meeting_link,
     )
+
+    if body.historia_ids:
+        historia_repo = HistoriaUsuarioRepository(db)
+        task_repo = TaskRepository(db)
+        sprint_uuid = sprint.id
+        for hid in body.historia_ids:
+            historia = await historia_repo.get_by_id(HistoriaUsuarioId(value=UUID(hid)))
+            if historia:
+                task = Task.create(
+                    historia_usuario_id=historia.id,
+                    titulo=historia.titulo,
+                    descripcion=historia.descripcion,
+                    sprint_id=SprintId(value=UUID(sprint_uuid)),
+                )
+                await task_repo.save(task)
+        await db.commit()
+
+    return sprint
 
 
 @router.get("")
