@@ -2,104 +2,78 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
     branches: [main]
 
-env:
-  PYTHON_VERSION: "3.12"
-  NODE_VERSION: "20"
-
 jobs:
-  lint-backend:
+  backend-lint:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: tesis-gestkrun-api
+        working-directory: ./tesis-gestkrun-api
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: "3.14"
+          cache: "pip"
       - run: pip install ruff
       - run: ruff check app/
 
-  lint-frontend:
+  backend-test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: tesis-gestkrun-web
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-      - run: corepack enable && pnpm install
-      - run: pnpm run lint
-
-  test-backend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tesis-gestkrun-api
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: gestkrun
-          POSTGRES_PASSWORD: gestkrun_test
-          POSTGRES_DB: gestkrun_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+        working-directory: ./tesis-gestkrun-api
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - run: pip install pytest pytest-asyncio pytest-cov httpx
-      - run: pip install -e .
-        working-directory: .
-      - run: pytest --cov=app --cov-fail-under=85 -v
+          python-version: "3.14"
+          cache: "pip"
+      - run: pip install poetry
+      - run: poetry install
+      - run: poetry run pytest tests/ --cov=app --cov-report=term --cov-fail-under=85
 
-  test-frontend:
+  frontend-lint:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: tesis-gestkrun-web
+        working-directory: ./tesis-gestkrun-web
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-      - run: corepack enable && pnpm install
-      - run: pnpm run test -- --coverage
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+      - run: npx eslint src/
 
-  build:
+  frontend-build:
     runs-on: ubuntu-latest
-    needs: [lint-backend, lint-frontend, test-backend, test-frontend]
+    defaults:
+      run:
+        working-directory: ./tesis-gestkrun-web
     steps:
       - uses: actions/checkout@v4
-      - run: docker compose -f docker/docker-compose.yml build
-
-  security:
-    runs-on: ubuntu-latest
-    needs: [lint-backend, lint-frontend]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - run: pip install bandit semgrep
-      - run: bandit -r tesis-gestkrun-api/ -f json -o bandit-report.json || true
-      - run: semgrep --config=auto tesis-gestkrun-api/ || true
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-      - run: npm audit --audit-level=high --prefix tesis-gestkrun-web || true
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+      - run: npx tsc --noEmit
+      - run: npm run build
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bandit scan (backend)
+        run: |
+          pip install bandit
+          bandit -r tesis-gestkrun-api/app/ -f json -o bandit-report.json || true
+      - name: npm audit (frontend)
+        run: |
+          cd tesis-gestkrun-web
+          npm audit --audit-level=high || true

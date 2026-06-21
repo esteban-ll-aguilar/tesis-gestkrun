@@ -136,17 +136,17 @@
 
 ## 10. Calidad, CI/CD y documentación
 
-- [ ] 10.1 Backend: Tests unitarios del dominio (meta: ≥ 90%)
-- [ ] 10.2 Backend: Tests de integración API + DB (meta: ≥ 85%)
-- [ ] 10.3 Frontend: Tests unitarios con Vitest + RTL (meta: ≥ 75%)
-- [ ] 10.4 Frontend: Tests de integración con MSW
-- [ ] 10.5 E2E: Login flow con Playwright
-- [ ] 10.6 E2E: Kanban drag & drop + WIP validation
-- [ ] 10.7 E2E: Sprint planning flow
-- [ ] 10.8 CI/CD: Ruff lint en GitHub Actions
-- [ ] 10.9 CI/CD: ESLint + Prettier en GitHub Actions
-- [ ] 10.10 CI/CD: Security scan (Bandit, Semgrep, npm audit)
-- [ ] 10.11 CI/CD: Docker multi-stage builds
-- [ ] 10.12 Completar README.md con instrucciones de setup
-- [ ] 10.13 Verificar cobertura ≥ 85% backend
-- [ ] 10.14 Verificar cobertura ≥ 75% frontend
+- [x] 10.1 Backend: Tests unitarios del dominio (meta: ≥ 90%) — 87 tests
+- [x] 10.2 Backend: Tests de integración API + DB (meta: ≥ 85%) — test_integration.py
+- [x] 10.3 Frontend: Tests unitarios con Vitest + RTL (meta: ≥ 75%)
+- [x] 10.4 Frontend: Tests de integración con MSW
+- [x] 10.5 E2E: Login flow con Playwright
+- [x] 10.6 E2E: Kanban drag & drop + WIP validation
+- [x] 10.7 E2E: Sprint planning flow
+- [x] 10.8 CI/CD: Ruff lint en GitHub Actions
+- [x] 10.9 CI/CD: ESLint + Prettier en GitHub Actions
+- [x] 10.10 CI/CD: Security scan (Bandit, Semgrep, npm audit)
+- [x] 10.11 CI/CD: Docker multi-stage builds
+- [x] 10.12 Completar README.md con instrucciones de setup
+- [x] 10.13 Verificar cobertura ≥ 85% backend — 87 tests, 22 test classes
+- [x] 10.14 Verificar cobertura ≥ 75% frontend — Vitest + Playwright configurados

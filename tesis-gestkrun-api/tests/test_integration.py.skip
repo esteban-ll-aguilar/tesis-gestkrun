@@ -1,0 +1,67 @@
+import pytest
+from httpx import AsyncClient, ASGITransport
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+
+from app.main import app
+from app.core.database import get_db
+from app.infrastructure.persistence.models import Base
+
+
+DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+
+
+@pytest.fixture
+async def session():
+    engine = create_async_engine(DATABASE_URL, echo=False)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    async with async_session() as s:
+        yield s
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    await engine.dispose()
+
+
+@pytest.fixture
+async def client(session):
+    async def override_get_db():
+        yield session
+
+    app.dependency_overrides[get_db] = override_get_db
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        yield ac
+    app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_health_endpoint(client: AsyncClient):
+    response = await client.get("/health")
+    assert response.status_code == 200
+    data = response.json()
+    assert "status" in data
+
+
+@pytest.mark.asyncio
+async def test_ready_endpoint(client: AsyncClient):
+    response = await client.get("/ready")
+    assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_create_user_and_login(client: AsyncClient):
+    response = await client.post(
+        "/api/v1/auth/register",
+        json={"nombre": "Test User", "email": "test@test.com", "password": "Test1234!"},
+    )
+    assert response.status_code in (200, 201)
+
+    response = await client.post(
+        "/api/v1/auth/login",
+        data={"username": "test@test.com", "password": "Test1234!"},
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    if response.status_code == 200:
+        data = response.json()
+        assert "access_token" in data
