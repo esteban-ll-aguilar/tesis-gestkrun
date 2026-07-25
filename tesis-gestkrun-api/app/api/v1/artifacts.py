@@ -5,11 +5,14 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_session
-from app.domain.entities import Artifact, ArtifactVersion, User
+from app.domain.entities.artifact import Artifact, ArtifactVersion
+from app.domain.entities.user import User
 from app.domain.enums import TipoArtefacto
 from app.domain.value_objects import ArtifactId, ArtifactVersionId, TaskId
-from app.infrastructure.persistence.repositories import (
+from app.infrastructure.persistence.repositories.artifact_repository import (
     ArtifactRepository,
+)
+from app.infrastructure.persistence.repositories.artifact_version_repository import (
     ArtifactVersionRepository,
 )
 

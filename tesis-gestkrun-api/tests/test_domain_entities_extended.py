@@ -1,16 +1,12 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
-from app.domain.entities import (
-    Artifact,
-    ArtifactVersion,
-    Epica,
-    HistoriaUsuario,
-    Message,
-    Sprint,
-    SprintEvento,
-    Task,
-    TaskStateTransition,
-)
+from app.domain.entities.artifact import Artifact, ArtifactVersion
+from app.domain.entities.epica import Epica
+from app.domain.entities.historia_usuario import HistoriaUsuario
+from app.domain.entities.message import Message
+from app.domain.entities.sprint import Sprint
+from app.domain.entities.sprint_evento import SprintEvento
+from app.domain.entities.task import Task, TaskStateTransition
 from app.domain.enums import (
     EstadoSprint,
     EstadoTarea,
@@ -25,7 +21,6 @@ from app.domain.value_objects import (
     EpicaId,
     EstimacionEsfuerzo,
     HistoriaUsuarioId,
-    MessageId,
     ModuleId,
     ProjectId,
     SprintEventoId,
@@ -60,8 +55,9 @@ class TestSprintEntity:
         project_id = ProjectId.generate()
         sprint = Sprint.plan(project_id, "Sprint 1", "", 14, date.today())
         sprint.start()
-        from app.domain.value_objects import DomainError
         import pytest
+
+        from app.domain.value_objects import DomainError
         with pytest.raises(DomainError):
             sprint.start()
 

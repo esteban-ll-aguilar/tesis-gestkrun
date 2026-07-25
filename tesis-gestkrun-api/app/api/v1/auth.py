@@ -5,12 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.dependencies import get_current_user, get_session
 from app.core.config import settings
 from app.core.rate_limiter import limiter
-from app.domain.entities import User
+from app.domain.entities.user import User
 from app.domain.value_objects import Email
 from app.infrastructure.auth.jwt_provider import JWTProvider
 from app.infrastructure.auth.password_hasher import PasswordHasherService
-from app.infrastructure.persistence.models import UserModel
-from app.infrastructure.persistence.repositories import UserRepository
+from app.infrastructure.persistence.models.user_model import UserModel
+from app.infrastructure.persistence.repositories.user_repository import UserRepository
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

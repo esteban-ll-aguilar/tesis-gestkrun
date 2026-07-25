@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.domain.enums import Rol
 from app.infrastructure.auth.jwt_provider import JWTProvider
-from app.infrastructure.persistence.repositories import UserRepository
+from app.infrastructure.persistence.repositories.user_repository import UserRepository
 
 jwt_provider = JWTProvider()
 

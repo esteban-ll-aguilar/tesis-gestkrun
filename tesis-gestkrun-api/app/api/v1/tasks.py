@@ -4,12 +4,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_session
-from app.domain.entities import User
+from app.domain.entities.user import User
 from app.domain.value_objects import ProjectId, SprintId, UserId
-from app.infrastructure.persistence.repositories import (
-    SprintRepository,
-    TaskRepository,
-)
+from app.infrastructure.persistence.repositories.sprint_repository import SprintRepository
+from app.infrastructure.persistence.repositories.task_repository import TaskRepository
 
 router = APIRouter(prefix="/projects/{project_id}/tasks", tags=["tasks"])
 

@@ -1,6 +1,6 @@
-from datetime import date, datetime
+from datetime import datetime
 
-from app.domain.entities import Task
+from app.domain.entities.task import Task
 from app.domain.enums import EstadoTarea
 from app.domain.services import (
     KanbanFlowService,
@@ -118,7 +118,10 @@ class TestMetricsCalculationService:
 
 
 def _make_task(estado: EstadoTarea) -> Task:
-    from app.domain.entities import HistoriaUsuario, Epica, Project, User
+    from app.domain.entities.epica import Epica
+    from app.domain.entities.historia_usuario import HistoriaUsuario
+    from app.domain.entities.project import Project
+    from app.domain.entities.user import User
     from app.domain.enums import Prioridad
     from app.domain.value_objects import Email, EstimacionEsfuerzo, PasswordHash
 

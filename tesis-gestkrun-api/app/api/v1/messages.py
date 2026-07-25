@@ -2,16 +2,16 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from sqlalchemy import select
-
 from app.api.dependencies import get_current_user, get_session
-from app.domain.entities import Message, User
+from app.domain.entities.message import Message
+from app.domain.entities.user import User
 from app.domain.enums import TipoMensaje
 from app.domain.value_objects import ProjectId, TaskId, UserId
-from app.infrastructure.persistence.models import UserModel
-from app.infrastructure.persistence.repositories import MessageRepository
+from app.infrastructure.persistence.models.user_model import UserModel
+from app.infrastructure.persistence.repositories.message_repository import MessageRepository
 
 router = APIRouter(prefix="/projects/{project_id}/messages", tags=["messages"])
 

@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.dependencies import get_current_user, get_session, require_any_role, require_role
+from app.api.dependencies import get_session, require_any_role, require_role
+from app.domain.entities.user import User
 from app.domain.enums import Rol
-from app.domain.entities import User
-from app.infrastructure.persistence.models import UserModel
+from app.infrastructure.persistence.models.user_model import UserModel
 
 router = APIRouter(prefix="/users", tags=["users"])
 

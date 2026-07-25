@@ -5,11 +5,11 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_session
-from app.domain.entities import User
+from app.domain.entities.user import User
 from app.domain.enums import EstadoTarea
 from app.domain.value_objects import ProjectId
-from app.infrastructure.persistence.models import TaskModel as TaskModel_
-from app.infrastructure.persistence.repositories import SprintRepository
+from app.infrastructure.persistence.models.task_model import TaskModel as TaskModel_
+from app.infrastructure.persistence.repositories.sprint_repository import SprintRepository
 
 router = APIRouter(prefix="/dashboard/{project_id}", tags=["dashboard"])
 

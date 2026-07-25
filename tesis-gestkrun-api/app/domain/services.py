@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from app.domain.entities import Task
+from app.domain.entities.task import Task
 from app.domain.enums import EstadoTarea
 from app.domain.events import WIPViolated
 from app.domain.value_objects import UserId

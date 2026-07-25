@@ -6,25 +6,26 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_session, require_role
-from app.application.backlog import (
-    CancelSprintUseCase,
-    CloseSprintUseCase,
-    CreateSprintEventoUseCase,
-    GetSprintUseCase,
-    ListSprintEventosUseCase,
-    ListSprintsUseCase,
-    PlanSprintUseCase,
-    StartSprintUseCase,
-)
-from app.domain.entities import User, Task
+from app.application.use_cases.sprints.cancel_sprint import CancelSprintUseCase
+from app.application.use_cases.sprints.close_sprint import CloseSprintUseCase
+from app.application.use_cases.sprints.create_sprint_evento import CreateSprintEventoUseCase
+from app.application.use_cases.sprints.get_sprint import GetSprintUseCase
+from app.application.use_cases.sprints.list_sprint_eventos import ListSprintEventosUseCase
+from app.application.use_cases.sprints.list_sprints import ListSprintsUseCase
+from app.application.use_cases.sprints.plan_sprint import PlanSprintUseCase
+from app.application.use_cases.sprints.start_sprint import StartSprintUseCase
+from app.domain.entities.task import Task
+from app.domain.entities.user import User
 from app.domain.enums import Rol, TipoEventoScrum
 from app.domain.value_objects import HistoriaUsuarioId, ProjectId, SprintId
-from app.infrastructure.persistence.repositories import (
+from app.infrastructure.persistence.repositories.historia_usuario_repository import (
     HistoriaUsuarioRepository,
-    SprintEventoRepository,
-    SprintRepository,
-    TaskRepository,
 )
+from app.infrastructure.persistence.repositories.sprint_evento_repository import (
+    SprintEventoRepository,
+)
+from app.infrastructure.persistence.repositories.sprint_repository import SprintRepository
+from app.infrastructure.persistence.repositories.task_repository import TaskRepository
 
 router = APIRouter(prefix="/projects/{project_id}/sprints", tags=["sprints"])
 

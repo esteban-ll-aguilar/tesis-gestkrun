@@ -5,24 +5,22 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_session, require_role
-from app.application.projects import (
-    AssignTeamUseCase,
-    CreateProjectDTO,
-    CreateProjectUseCase,
-    DeleteProjectUseCase,
-    GetProjectsUseCase,
-    GetProjectUseCase,
-    UpdateProjectUseCase,
-)
-from app.domain.entities import User
+from app.application.dto.projects import CreateProjectDTO
+from app.application.use_cases.projects.assign_team import AssignTeamUseCase
+from app.application.use_cases.projects.create_project import CreateProjectUseCase
+from app.application.use_cases.projects.delete_project import DeleteProjectUseCase
+from app.application.use_cases.projects.get_project import GetProjectUseCase
+from app.application.use_cases.projects.get_projects import GetProjectsUseCase
+from app.application.use_cases.projects.update_project import UpdateProjectUseCase
+from app.domain.entities.user import User
 from app.domain.enums import Rol
 from app.domain.value_objects import ProjectId, UserId
-from app.infrastructure.persistence.models import UserModel
-from app.infrastructure.persistence.repositories import (
+from app.infrastructure.persistence.models.user_model import UserModel
+from app.infrastructure.persistence.repositories.project_assignment_repository import (
     ProjectAssignmentRepository,
-    ProjectRepository,
-    UserRepository,
 )
+from app.infrastructure.persistence.repositories.project_repository import ProjectRepository
+from app.infrastructure.persistence.repositories.user_repository import UserRepository
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 

@@ -14,7 +14,7 @@ from app.core.config import settings
 from app.core.exceptions import AppException, exception_handler
 from app.core.logging import setup_logging
 from app.core.rate_limiter import limiter
-from app.infrastructure.persistence.models import Base
+from app.infrastructure.persistence.models.base import Base
 from seed import seed
 
 logger = get_logger()

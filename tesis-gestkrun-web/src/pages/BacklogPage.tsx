@@ -10,6 +10,7 @@ import { backlogService } from '../features/backlog/backlogService';
 import http from '../services/http';
 import { Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Pencil, Box, ListTodo } from 'lucide-react';
 import { useAuthStore } from '../stores/auth';
+import type { Epica, HistoriaUsuario } from '../types';
 import ModuleList from '../features/projects/ModuleList';
 
 interface ModuleDTO { id: string; nombre: string }
@@ -207,7 +208,7 @@ function EpicaForm({ projectId, modules, onClose, onSuccess }: { projectId: stri
   );
 }
 
-function EditEpicaForm({ projectId, epica, modules, onClose, onSuccess }: { projectId: string; epica: any; modules: ModuleDTO[]; onClose: () => void; onSuccess: () => void }) {
+function EditEpicaForm({ projectId, epica, modules, onClose, onSuccess }: { projectId: string; epica: Epica; modules: ModuleDTO[]; onClose: () => void; onSuccess: () => void }) {
   const [titulo, setTitulo] = useState(epica.titulo);
   const [descripcion, setDescripcion] = useState(epica.descripcion || '');
   const [prioridad, setPrioridad] = useState(epica.prioridad);
@@ -262,7 +263,7 @@ function HistoriaForm({ projectId, epicaId, onClose, onSuccess }: { projectId: s
   );
 }
 
-function EditHistoriaForm({ projectId, historia, onClose, onSuccess }: { projectId: string; historia: any; onClose: () => void; onSuccess: () => void }) {
+function EditHistoriaForm({ projectId, historia, onClose, onSuccess }: { projectId: string; historia: HistoriaUsuario; onClose: () => void; onSuccess: () => void }) {
   const [titulo, setTitulo] = useState(historia.titulo);
   const [estimacion, setEstimacion] = useState(historia.estimacion);
   const mutation = useMutation({

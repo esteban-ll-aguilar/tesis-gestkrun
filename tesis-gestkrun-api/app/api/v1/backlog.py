@@ -5,24 +5,28 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_session, require_role
-from app.application.backlog import (
-    CreateEpicaUseCase,
-    CreateHistoriaUsuarioUseCase,
-    DeleteEpicaUseCase,
-    DeleteHistoriaUsuarioUseCase,
-    ListEpicasUseCase,
-    ListHistoriasUseCase,
-    PrioritizeBacklogUseCase,
-    UpdateEpicaUseCase,
-    UpdateHistoriaUsuarioUseCase,
-)
-from app.domain.entities import User
+from app.application.use_cases.backlog.create_epica import CreateEpicaUseCase
+from app.application.use_cases.backlog.create_historia_usuario import CreateHistoriaUsuarioUseCase
+from app.application.use_cases.backlog.delete_epica import DeleteEpicaUseCase
+from app.application.use_cases.backlog.delete_historia_usuario import DeleteHistoriaUsuarioUseCase
+from app.application.use_cases.backlog.list_epicas import ListEpicasUseCase
+from app.application.use_cases.backlog.list_historias import ListHistoriasUseCase
+from app.application.use_cases.backlog.prioritize_backlog import PrioritizeBacklogUseCase
+from app.application.use_cases.backlog.update_epica import UpdateEpicaUseCase
+from app.application.use_cases.backlog.update_historia_usuario import UpdateHistoriaUsuarioUseCase
+from app.domain.entities.user import User
 from app.domain.enums import Prioridad, Rol
 from app.domain.value_objects import EpicaId, HistoriaUsuarioId, ProjectId
-from app.infrastructure.persistence.repositories import (
+from app.infrastructure.persistence.repositories.epica_repository import (
     EpicaRepository,
+)
+from app.infrastructure.persistence.repositories.historia_usuario_repository import (
     HistoriaUsuarioRepository,
+)
+from app.infrastructure.persistence.repositories.sprint_repository import (
     SprintRepository,
+)
+from app.infrastructure.persistence.repositories.task_repository import (
     TaskRepository,
 )
 

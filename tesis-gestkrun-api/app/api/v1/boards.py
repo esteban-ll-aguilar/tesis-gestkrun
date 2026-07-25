@@ -5,16 +5,21 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.dependencies import get_current_user, get_session, require_any_role, require_role
-from app.domain.entities import Task, TaskStateTransition, User
+from app.api.dependencies import get_current_user, get_session, require_any_role
+from app.domain.entities.task import Task, TaskStateTransition
+from app.domain.entities.user import User
 from app.domain.enums import EstadoTarea, Rol
 from app.domain.services import KanbanFlowService, WIPValidationService
-from app.domain.value_objects import HistoriaUsuarioId, ProjectId, SprintId, TaskId, UserId, ModuleId
-from app.infrastructure.persistence.repositories import (
-    ModuleDeveloperRepository,
-    ModuleRepository,
-    SprintRepository,
-    TaskRepository,
+from app.domain.value_objects import (
+    HistoriaUsuarioId,
+    ProjectId,
+    SprintId,
+    TaskId,
+    UserId,
+)
+from app.infrastructure.persistence.repositories.sprint_repository import SprintRepository
+from app.infrastructure.persistence.repositories.task_repository import TaskRepository
+from app.infrastructure.persistence.repositories.task_state_transition_repository import (
     TaskStateTransitionRepository,
 )
 
@@ -106,7 +111,9 @@ async def get_board(
 @router.post("/tasks")
 async def create_task(
     body: CreateTaskRequest,
-    current_user: User = Depends(require_any_role(Rol.ADMIN, Rol.PRODUCT_OWNER, Rol.SCRUM_MASTER, Rol.DEVELOPER)),
+    current_user: User = Depends(
+        require_any_role(Rol.ADMIN, Rol.PRODUCT_OWNER, Rol.SCRUM_MASTER, Rol.DEVELOPER)
+    ),
     db: AsyncSession = Depends(get_session),
 ):
     task_repo = TaskRepository(db)

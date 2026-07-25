@@ -1,18 +1,16 @@
-from datetime import date, datetime
+from datetime import date
 
 import pytest
 
-from app.domain.entities import (
-    Artifact,
-    Epica,
-    HistoriaUsuario,
-    Message,
-    Module,
-    Project,
-    Sprint,
-    Task,
-    User,
-)
+from app.domain.entities.artifact import Artifact
+from app.domain.entities.epica import Epica
+from app.domain.entities.historia_usuario import HistoriaUsuario
+from app.domain.entities.message import Message
+from app.domain.entities.module import Module
+from app.domain.entities.project import Project
+from app.domain.entities.sprint import Sprint
+from app.domain.entities.task import Task
+from app.domain.entities.user import User
 from app.domain.enums import (
     EstadoProyecto,
     EstadoSprint,
