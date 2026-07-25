@@ -9,7 +9,17 @@ from app.domain.entities.message import Message
 from app.domain.entities.module import Module
 from app.domain.entities.project import Project
 from app.domain.entities.sprint import Sprint
+from app.domain.entities.sprint_observer import AuditLogObserver, MetricsObserver
 from app.domain.entities.task import Task
+from app.domain.entities.task_state import (
+    BloqueadoState,
+    CanceladoState,
+    EnProcesoState,
+    EnRevisionState,
+    PendienteState,
+    TerminadoState,
+    get_state,
+)
 from app.domain.entities.user import User
 from app.domain.enums import (
     EstadoProyecto,
@@ -25,8 +35,10 @@ from app.domain.events import (
     MessageSent,
     ModuleAdded,
     ProjectCreated,
+    SprintCancelled,
     SprintClosed,
     SprintPlanned,
+    SprintStarted,
     TaskBlocked,
     TaskMoved,
     UserRegistered,
@@ -106,6 +118,58 @@ class TestProject:
         project.change_status(EstadoProyecto.INACTIVO)
         assert project.estado == EstadoProyecto.INACTIVO
 
+    def test_soft_delete_emits_event(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        project.soft_delete()
+        assert project.deleted_at is not None
+        events = project.pull_events()
+        assert any(type(e).__name__ == "ProjectDeleted" for e in events)
+
+    def test_create_historia_through_project(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        epica = project.create_epica("E", "D", Prioridad.MEDIA, 1)
+        project.pull_events()
+        hu = project.create_historia(
+            epica.id, "HU 1", "Desc", "Criterios", Prioridad.ALTA,
+            EstimacionEsfuerzo(5), 1,
+        )
+        assert hu.titulo == "HU 1"
+        assert int(hu.estimacion) == 5
+
+    def test_add_module_through_project(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        project.pull_events()
+        module = project.add_module("Module 1", "Description")
+        assert module.nombre == "Module 1"
+        assert module.project_id == project.id
+
+    def test_plan_sprint_through_project(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        project.pull_events()
+        sprint = project.plan_sprint("S1", "Goal", 14, date.today())
+        assert sprint.nombre == "S1"
+        assert sprint.project_id == project.id
+
+    def test_create_epica_through_project(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        project.pull_events()
+        epica = project.create_epica("Epic 1", "Desc", Prioridad.ALTA, 1)
+        assert epica.titulo == "Epic 1"
+        assert epica.project_id == project.id
+
+    def test_add_message_through_project(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        project.pull_events()
+        msg = project.add_message("Hello", owner.id, "PROYECTO")
+        assert msg.contenido == "Hello"
+        assert msg.proyecto_id == project.id
+
 
 class TestModule:
     def test_create_module(self):
@@ -176,6 +240,7 @@ class TestSprint:
         sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
         sprint.pull_events()
         sprint.start()
+        sprint.pull_events()
         sprint.close(owner.id)
         assert sprint.estado == EstadoSprint.FINALIZADO
         events = sprint.pull_events()
@@ -188,6 +253,86 @@ class TestSprint:
         sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
         with pytest.raises(DomainError, match="Cannot close sprint in state"):
             sprint.close(owner.id)
+
+    def test_start_emits_event(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
+        sprint.pull_events()
+        sprint.start()
+        events = sprint.pull_events()
+        assert len(events) == 1
+        assert isinstance(events[0], SprintStarted)
+
+    def test_cancel_emits_event(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
+        sprint.pull_events()
+        sprint.start()
+        sprint.pull_events()
+        sprint.cancel()
+        assert sprint.estado == EstadoSprint.CANCELADO
+        events = sprint.pull_events()
+        assert len(events) == 1
+        assert isinstance(events[0], SprintCancelled)
+
+    def test_cancel_without_start(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
+        sprint.pull_events()
+        sprint.cancel()
+        assert sprint.estado == EstadoSprint.CANCELADO
+        events = sprint.pull_events()
+        assert len(events) == 1
+        assert isinstance(events[0], SprintCancelled)
+
+    def test_observer_notified_on_start(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
+        audit = AuditLogObserver()
+        metrics = MetricsObserver()
+        sprint.attach(audit)
+        sprint.attach(metrics)
+        sprint.pull_events()
+        sprint.start()
+        assert "started" in audit._log[0]
+        assert metrics.summary()["started"] == 1
+
+    def test_observer_notified_on_close(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
+        audit = AuditLogObserver()
+        sprint.attach(audit)
+        sprint.pull_events()
+        sprint.start()
+        sprint.pull_events()
+        sprint.close(owner.id)
+        assert "closed" in audit._log[-1]
+
+    def test_observer_notified_on_cancel(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
+        metrics = MetricsObserver()
+        sprint.attach(metrics)
+        sprint.pull_events()
+        sprint.cancel()
+        assert metrics.summary()["cancelled"] == 1
+
+    def test_detach_observer(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        sprint = Sprint.plan(project.id, "S1", "Obj", 14, date.today())
+        audit = AuditLogObserver()
+        sprint.attach(audit)
+        sprint.detach(audit)
+        sprint.pull_events()
+        sprint.start()
+        assert len(audit._log) == 0
 
 
 class TestTask:
@@ -241,6 +386,65 @@ class TestTask:
         task.block("Blocked", owner.id)
         task.unblock()
         assert task.estado == EstadoTarea.EN_PROCESO
+
+    def test_can_move_to_valid(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        epica = Epica.create(project.id, "E", "D", Prioridad.MEDIA, 1)
+        hu = HistoriaUsuario.create(
+            epica.id, "HU", "D", "C", Prioridad.ALTA, EstimacionEsfuerzo(3), 1,
+        )
+        task = Task.create(hu.id, "T", "D")
+        assert task.can_move_to(EstadoTarea.EN_PROCESO) is True
+        assert task.can_move_to(EstadoTarea.CANCELADO) is True
+        assert task.can_move_to(EstadoTarea.TERMINADO) is False
+
+    def test_can_move_to_invalid_from_terminal(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        epica = Epica.create(project.id, "E", "D", Prioridad.MEDIA, 1)
+        hu = HistoriaUsuario.create(
+            epica.id, "HU", "D", "C", Prioridad.ALTA, EstimacionEsfuerzo(3), 1,
+        )
+        task = Task.create(hu.id, "T", "D")
+        task.move_to(EstadoTarea.CANCELADO, owner.id)
+        assert task.can_move_to(EstadoTarea.EN_PROCESO) is False
+        assert task.can_move_to(EstadoTarea.PENDIENTE) is False
+
+    def test_move_to_invalid_raises(self):
+        owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
+        project = Project.create("P", "D", owner.id)
+        epica = Epica.create(project.id, "E", "D", Prioridad.MEDIA, 1)
+        hu = HistoriaUsuario.create(
+            epica.id, "HU", "D", "C", Prioridad.ALTA, EstimacionEsfuerzo(3), 1,
+        )
+        task = Task.create(hu.id, "T", "D")
+        with pytest.raises(DomainError, match="Cannot transition from PENDIENTE to TERMINADO"):
+            task.move_to(EstadoTarea.TERMINADO, owner.id)
+
+    def test_task_state_instances(self):
+        assert isinstance(get_state(EstadoTarea.PENDIENTE), PendienteState)
+        assert isinstance(get_state(EstadoTarea.EN_PROCESO), EnProcesoState)
+        assert isinstance(get_state(EstadoTarea.BLOQUEADO), BloqueadoState)
+        assert isinstance(get_state(EstadoTarea.EN_REVISION), EnRevisionState)
+        assert isinstance(get_state(EstadoTarea.TERMINADO), TerminadoState)
+        assert isinstance(get_state(EstadoTarea.CANCELADO), CanceladoState)
+
+    def test_terminal_states(self):
+        assert TerminadoState().is_terminal is True
+        assert CanceladoState().is_terminal is True
+        assert PendienteState().is_terminal is False
+        assert EnProcesoState().is_terminal is False
+
+    def test_blocked_can_go_to_proceso(self):
+        assert BloqueadoState().can_transition_to(EstadoTarea.EN_PROCESO) is True
+        assert BloqueadoState().can_transition_to(EstadoTarea.TERMINADO) is False
+
+    def test_allowed_transitions_from_pendiente(self):
+        state = PendienteState()
+        assert state.can_transition_to(EstadoTarea.EN_PROCESO) is True
+        assert state.can_transition_to(EstadoTarea.CANCELADO) is True
+        assert state.can_transition_to(EstadoTarea.TERMINADO) is False
 
 
 class TestMessage:

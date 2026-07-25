@@ -10,6 +10,7 @@ import { projectService, type AssignmentDTO } from '../features/projects/project
 import { backlogService } from '../features/backlog/backlogService';
 import { AlertTriangle, Lock, Unlock, User, Filter } from 'lucide-react';
 import { useAuthStore } from '../stores/auth';
+import { canTransition, type EstadoTarea } from '../types/domain/task';
 
 interface KanbanTaskDTO {
   id: string; titulo: string; descripcion: string; estado: string;
@@ -141,6 +142,12 @@ export default function ProjectBoardPage() {
       setError('Solo el desarrollador asignado puede mover esta tarea');
       return;
     }
+
+    if (!canTransition(task.estado as EstadoTarea, targetColumn as EstadoTarea)) {
+      setError(`Transición inválida: de ${task.estado} a ${targetColumn}`);
+      return;
+    }
+
     transitionMutation.mutate({ taskId, toEstado: targetColumn });
   };
 
@@ -230,7 +237,7 @@ function TaskDetailModal({ task, assignments, userMap, onClose, onAssign, onBloc
           {task.fecha_limite && <p><strong>Fecha límite:</strong> {task.fecha_limite}</p>}
         </div>
         <div className="flex gap-2">
-          {task.estado !== 'BLOQUEADO' && task.estado !== 'TERMINADO' && task.estado !== 'CANCELADO' && (
+          {canTransition(task.estado as EstadoTarea, 'BLOQUEADO') && (
             <button onClick={onBlock} className="bg-red-600 text-white px-3 py-1.5 rounded text-sm hover:bg-red-700 flex items-center gap-1"><Lock size={14} /> Bloquear</button>
           )}
           {task.estado === 'BLOQUEADO' && (

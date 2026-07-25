@@ -1,9 +1,6 @@
 from datetime import datetime
 
-from app.domain.entities.task import Task
-from app.domain.enums import EstadoTarea
 from app.domain.services import (
-    KanbanFlowService,
     MetricsCalculationService,
     WIPValidationService,
 )
@@ -45,41 +42,6 @@ class TestWIPValidationService:
         assert result is not None
 
 
-class TestKanbanFlowService:
-    def setup_method(self):
-        self.service = KanbanFlowService()
-
-    def test_valid_transition(self):
-        task = _make_task(EstadoTarea.PENDIENTE)
-        assert self.service.can_transition(task, EstadoTarea.EN_PROCESO) is True
-
-    def test_invalid_transition(self):
-        task = _make_task(EstadoTarea.TERMINADO)
-        assert self.service.can_transition(task, EstadoTarea.EN_PROCESO) is False
-
-    def test_terminal_states(self):
-        assert self.service.is_terminal(EstadoTarea.TERMINADO) is True
-        assert self.service.is_terminal(EstadoTarea.CANCELADO) is True
-        assert self.service.is_terminal(EstadoTarea.EN_PROCESO) is False
-
-    def test_get_allowed_transitions_pendiente(self):
-        task = _make_task(EstadoTarea.PENDIENTE)
-        allowed = self.service.get_allowed_transitions(task)
-        assert EstadoTarea.EN_PROCESO in allowed
-        assert EstadoTarea.CANCELADO in allowed
-        assert EstadoTarea.TERMINADO not in allowed
-
-    def test_all_transitions_blocked_from_terminal(self):
-        for estado in [EstadoTarea.TERMINADO, EstadoTarea.CANCELADO]:
-            task = _make_task(estado)
-            assert self.service.get_allowed_transitions(task) == []
-
-    def test_blocked_can_go_to_proceso(self):
-        task = _make_task(EstadoTarea.BLOQUEADO)
-        allowed = self.service.get_allowed_transitions(task)
-        assert EstadoTarea.EN_PROCESO in allowed
-
-
 class TestMetricsCalculationService:
     def setup_method(self):
         self.service = MetricsCalculationService()
@@ -117,21 +79,4 @@ class TestMetricsCalculationService:
         assert self.service.calculate_lead_time(now, now) == 0.0
 
 
-def _make_task(estado: EstadoTarea) -> Task:
-    from app.domain.entities.epica import Epica
-    from app.domain.entities.historia_usuario import HistoriaUsuario
-    from app.domain.entities.project import Project
-    from app.domain.entities.user import User
-    from app.domain.enums import Prioridad
-    from app.domain.value_objects import Email, EstimacionEsfuerzo, PasswordHash
 
-    owner = User.register("O", Email("o@t.com"), PasswordHash("a" * 32))
-    project = Project.create("P", "D", owner.id)
-    epica = Epica.create(project.id, "E", "D", Prioridad.BAJA, 1)
-    hu = HistoriaUsuario.create(
-        epica.id, "HU", "D", "C", Prioridad.MEDIA, EstimacionEsfuerzo(3), 1,
-    )
-    task = Task.create(hu.id, "T", "D")
-    task._events.clear()
-    object.__setattr__(task, "estado", estado)
-    return task

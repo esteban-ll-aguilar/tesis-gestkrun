@@ -9,7 +9,7 @@ from app.api.dependencies import get_current_user, get_session, require_any_role
 from app.domain.entities.task import Task, TaskStateTransition
 from app.domain.entities.user import User
 from app.domain.enums import EstadoTarea, Rol
-from app.domain.services import KanbanFlowService, WIPValidationService
+from app.domain.services import WIPValidationService
 from app.domain.value_objects import (
     HistoriaUsuarioId,
     ProjectId,
@@ -178,9 +178,8 @@ async def transition_task(
     _check_task_permission(task, current_user)
 
     to_estado = EstadoTarea(body.to_estado)
-    flow_service = KanbanFlowService()
 
-    if not flow_service.can_transition(task, to_estado):
+    if not task.can_move_to(to_estado):
         raise HTTPException(
             status_code=400,
             detail=f"Cannot transition from {task.estado.value} to {to_estado.value}",

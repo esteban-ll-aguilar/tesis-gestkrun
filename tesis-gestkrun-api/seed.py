@@ -1,10 +1,10 @@
 import asyncio
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from sqlalchemy import text
 from passlib.context import CryptContext
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from structlog import get_logger
 
 from app.core.config import settings
@@ -78,7 +78,7 @@ async def seed():
                         "email": user["email"],
                         "password_hash": pwd.hash(user["password"]),
                         "rol": user["rol"],
-                        "fecha_registro": datetime.now(timezone.utc),
+                        "fecha_registro": datetime.now(UTC),
                     },
                 )
                 logger.info("seed_create_user", email=user["email"])

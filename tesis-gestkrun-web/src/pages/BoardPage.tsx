@@ -10,6 +10,7 @@ import { projectService, type AssignmentDTO } from '../features/projects/project
 import type { KanbanTaskDTO, BoardDTO } from '../features/boards/boardService';
 import { ArrowLeft, AlertTriangle, Lock, Unlock, User } from 'lucide-react';
 import { useAuthStore } from '../stores/auth';
+import { canTransition, type EstadoTarea } from '../types/domain/task';
 
 const COLUMNS = ['PENDIENTE', 'EN_PROCESO', 'BLOQUEADO', 'EN_REVISION', 'TERMINADO', 'CANCELADO'];
 
@@ -164,6 +165,11 @@ export default function BoardPage() {
       return;
     }
 
+    if (!canTransition(task.estado as EstadoTarea, targetColumn as EstadoTarea)) {
+      setError(`Transición inválida: de ${task.estado} a ${targetColumn}`);
+      return;
+    }
+
     transitionMutation.mutate({ taskId, toEstado: targetColumn });
   };
 
@@ -263,7 +269,7 @@ function TaskDetailModal({ task, assignments, userMap, onClose, onAssign, onBloc
           {task.fecha_limite && <p><strong>Fecha límite:</strong> {task.fecha_limite}</p>}
         </div>
         <div className="flex gap-2">
-          {task.estado !== 'BLOQUEADO' && task.estado !== 'TERMINADO' && task.estado !== 'CANCELADO' && (
+          {canTransition(task.estado as EstadoTarea, 'BLOQUEADO') && (
             <button onClick={onBlock} className="bg-red-600 text-white px-3 py-1.5 rounded text-sm hover:bg-red-700 flex items-center gap-1">
               <Lock size={14} /> Bloquear
             </button>

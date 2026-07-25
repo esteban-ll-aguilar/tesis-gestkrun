@@ -41,6 +41,11 @@ class ProjectCreated(DomainEvent):
 
 
 @dataclass
+class ProjectDeleted(DomainEvent):
+    project_id: Any = None
+
+
+@dataclass
 class ModuleAdded(DomainEvent):
     module_id: Any = None
     project_id: Any = None
@@ -81,6 +86,18 @@ class SprintClosed(DomainEvent):
     sprint_id: Any = None
     project_id: Any = None
     closed_by: Any = None
+
+
+@dataclass
+class SprintStarted(DomainEvent):
+    sprint_id: Any = None
+    project_id: Any = None
+
+
+@dataclass
+class SprintCancelled(DomainEvent):
+    sprint_id: Any = None
+    project_id: Any = None
 
 
 @dataclass

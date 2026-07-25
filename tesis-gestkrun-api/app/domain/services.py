@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from app.domain.entities.task import Task
-from app.domain.enums import EstadoTarea
 from app.domain.events import WIPViolated
 from app.domain.value_objects import UserId
 
@@ -18,32 +16,6 @@ class WIPValidationService:
 
     def can_take_task(self, user_id: UserId, current_in_progress: int, wip_limit: int = 3) -> bool:
         return current_in_progress < wip_limit
-
-
-class KanbanFlowService:
-    VALID_TRANSITIONS = {
-        EstadoTarea.PENDIENTE: {EstadoTarea.EN_PROCESO, EstadoTarea.CANCELADO},
-        EstadoTarea.EN_PROCESO: {
-            EstadoTarea.BLOQUEADO, EstadoTarea.EN_REVISION, EstadoTarea.CANCELADO,
-        },
-        EstadoTarea.BLOQUEADO: {EstadoTarea.EN_PROCESO, EstadoTarea.CANCELADO},
-        EstadoTarea.EN_REVISION: {
-            EstadoTarea.TERMINADO, EstadoTarea.EN_PROCESO, EstadoTarea.CANCELADO,
-        },
-        EstadoTarea.TERMINADO: set(),
-        EstadoTarea.CANCELADO: set(),
-    }
-
-    def can_transition(self, task: Task, to_estado: EstadoTarea) -> bool:
-        return to_estado in self.VALID_TRANSITIONS.get(task.estado, set())
-
-    def get_allowed_transitions(self, task: Task) -> list[EstadoTarea]:
-        return sorted(
-            self.VALID_TRANSITIONS.get(task.estado, set()), key=lambda x: x.value
-        )
-
-    def is_terminal(self, estado: EstadoTarea) -> bool:
-        return estado in {EstadoTarea.TERMINADO, EstadoTarea.CANCELADO}
 
 
 class MetricsCalculationService:
