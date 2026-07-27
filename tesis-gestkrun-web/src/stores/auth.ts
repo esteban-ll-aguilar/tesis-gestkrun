@@ -48,17 +48,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
   login: async (email: string, password: string) => {
-    const res = await authService.login(email, password)
-    const { user, accessToken } = res.data
+    const tokenRes = await authService.login(email, password)
+    const accessToken = tokenRes.data.accessToken
     setAccessToken(accessToken)
     localStorage.setItem('accessToken', accessToken)
+    const meRes = await authService.me()
+    const user = meRes.data as User
     set({ user, isAuthenticated: true, initialized: true })
   },
   register: async (nombre: string, email: string, password: string) => {
-    const res = await authService.register(nombre, email, password)
-    const { user, accessToken } = res.data
+    const tokenRes = await authService.register(nombre, email, password)
+    const accessToken = tokenRes.data.accessToken
     setAccessToken(accessToken)
     localStorage.setItem('accessToken', accessToken)
+    const meRes = await authService.me()
+    const user = meRes.data as User
     set({ user, isAuthenticated: true, initialized: true })
   },
   hasRole: (...roles) => {

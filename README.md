@@ -107,3 +107,6 @@ tesis-gestkrun/
 - `POST /api/v1/projects/{id}/messages` — Chat
 - `POST /api/v1/artifacts` — Subir artefacto
 - `GET /api/v1/dashboard/{id}/metrics` — Métricas
+
+
+Motrar etiquetas, mejorar quien puede estar en el sprint etc

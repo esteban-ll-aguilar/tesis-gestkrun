@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -89,7 +89,7 @@ async def login(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=settings.environment != "development",
+        secure=False,
         samesite="lax",
         max_age=60 * 60 * 24 * settings.refresh_token_expire_days,
     )
@@ -100,9 +100,16 @@ async def login(
 @router.post("/refresh")
 @limiter.limit("20/minute")
 async def refresh(
-    request: Request, db: AsyncSession = Depends(get_session)
+    request: Request,
+    response: Response,
+    authorization: str | None = Header(None),
+    db: AsyncSession = Depends(get_session),
 ):
     refresh_token = request.cookies.get("refresh_token")
+    if not refresh_token and authorization and authorization.startswith("Bearer "):
+        token = authorization.split(" ")[1]
+        if jwt_provider.is_refresh_token(token):
+            refresh_token = token
     if not refresh_token:
         raise HTTPException(status_code=401, detail="No refresh token")
 
@@ -119,6 +126,15 @@ async def refresh(
         raise HTTPException(status_code=401, detail="User not found")
 
     access_token = jwt_provider.create_access_token(str(user.id), user.rol.value)
+    new_refresh_token = jwt_provider.create_refresh_token(str(user.id))
+    response.set_cookie(
+        key="refresh_token",
+        value=new_refresh_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=60 * 60 * 24 * settings.refresh_token_expire_days,
+    )
     return {"accessToken": access_token}
 
 

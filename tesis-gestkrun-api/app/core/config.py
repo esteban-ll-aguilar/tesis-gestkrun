@@ -16,6 +16,8 @@ class Settings(BaseSettings):
 
     allowed_origins: list[str] = ["http://localhost:5173", "http://localhost:80"]
 
+    storage_path: str = "/tmp/gestkrun-storage"
+
     rate_limit_general: int = 100
     rate_limit_auth: int = 20
 

@@ -2,16 +2,16 @@ import asyncio
 import sys
 from datetime import UTC, datetime
 
-from passlib.context import CryptContext
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from structlog import get_logger
 
 from app.core.config import settings
+from app.infrastructure.auth.password_hasher import PasswordHasherService
 
 logger = get_logger()
 
-pwd = CryptContext(schemes=["argon2"])
+hasher = PasswordHasherService()
 
 USERS = [
     {
@@ -60,13 +60,15 @@ async def seed():
                         {"rol": user["rol"], "id": existing_id},
                     )
                     logger.info("seed_update_role", email=user["email"], rol=user["rol"])
+                password_hash = str(hasher.hash(user["password"]))
                 await session.execute(
                     text("UPDATE users SET password_hash = :hash WHERE id = :id"),
-                    {"hash": pwd.hash(user["password"]), "id": existing_id},
+                    {"hash": password_hash, "id": existing_id},
                 )
                 logger.info("seed_update_password", email=user["email"])
             else:
                 import uuid
+                password_hash = str(hasher.hash(user["password"]))
                 await session.execute(
                     text("""
                         INSERT INTO users (id, nombre, email, password_hash, rol, fecha_registro)
@@ -76,7 +78,7 @@ async def seed():
                         "id": str(uuid.uuid4()),
                         "nombre": user["nombre"],
                         "email": user["email"],
-                        "password_hash": pwd.hash(user["password"]),
+                        "password_hash": password_hash,
                         "rol": user["rol"],
                         "fecha_registro": datetime.now(UTC),
                     },

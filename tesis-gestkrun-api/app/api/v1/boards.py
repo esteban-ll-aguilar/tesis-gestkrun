@@ -6,7 +6,8 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_session, require_any_role
-from app.domain.entities.task import Task, TaskStateTransition
+from app.domain.entities.task import Task
+from app.domain.entities.task_state_transition import TaskStateTransition
 from app.domain.entities.user import User
 from app.domain.enums import EstadoTarea, Rol
 from app.domain.services import WIPValidationService

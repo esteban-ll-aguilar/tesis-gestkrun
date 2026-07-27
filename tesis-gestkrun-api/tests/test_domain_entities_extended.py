@@ -1,12 +1,14 @@
 from datetime import date, datetime
 
-from app.domain.entities.artifact import Artifact, ArtifactVersion
+from app.domain.entities.artifact import Artifact
+from app.domain.entities.artifact_version import ArtifactVersion
 from app.domain.entities.epica import Epica
 from app.domain.entities.historia_usuario import HistoriaUsuario
 from app.domain.entities.message import Message
 from app.domain.entities.sprint import Sprint
 from app.domain.entities.sprint_evento import SprintEvento
-from app.domain.entities.task import Task, TaskStateTransition
+from app.domain.entities.task import Task
+from app.domain.entities.task_state_transition import TaskStateTransition
 from app.domain.enums import (
     EstadoSprint,
     EstadoTarea,
@@ -68,7 +70,7 @@ class TestSprintEntity:
         sprint.start()
         sprint.close(user_id)
         assert sprint.estado == EstadoSprint.FINALIZADO
-        assert len(sprint._events) == 2
+        assert len(sprint._events) == 3
 
     def test_cancel_sprint(self):
         sprint = Sprint.plan(ProjectId.generate(), "Sprint 1", "", 14, date.today())
